@@ -1,4 +1,3 @@
-import local from "api/local";
 import { storage } from "config/firebase";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
@@ -7,6 +6,7 @@ import "./imageUpload.scss"
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import Axios from "axios";
+import { useEffect } from "react";
 
 
 const ImageUpload = () => {
@@ -72,8 +72,8 @@ const ImageUpload = () => {
       }
 
       setPredictions(concepts)
+      setTitle(concepts[0].name)
     }
-
     // if server is deployed use this
     // return await local.post("/images", { imgUrl: url }).then(response => {
     //   if (response.data.length > 0) {
@@ -84,89 +84,92 @@ const ImageUpload = () => {
     // })
   }
 
+  const handleCameraUpload = async (uri) => {
+    const randInt = Math.floor(Math.random() * 1000000)
+
+    await storage.ref(`${userId}/images/temp_${randInt}`)
+      .putString(uri, 'data_url').then(async snap => {
+
+        console.log("uploaded base64 image")
+        console.log(snap)
+
+        const storageResponse = await storage
+          .ref(`${userId}/images`)
+          .child(`temp_${randInt}`)
+          .getDownloadURL()
+
+        const firebaseUrl = storageResponse ? storageResponse : {}
+
+        let data = {
+          src: firebaseUrl,
+          alt: imageAsFile.name,
+          innerTitle: title,
+          innerDetails: details,
+        };
+
+        // Save in db 
+        setUploadedImage((prevObject) => ({
+          ...data,
+          ...prevObject,
+          imgUrl: firebaseUrl,
+        }));
+
+        // Get predictions 
+        fetchData(firebaseUrl)
+      }).catch(err => console.log(err));
+
+  }
 
   const handleFireBaseUpload = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
+
 
     // image loading
     if (imageAsFile === "") {
       setPredictions([{ name: `Error: not an image, the image file is a ${typeof imageAsFile}` }])
     }
 
-    if (dataUri) {
-      const randInt = Math.floor(Math.random() * 1000000)
+    const uploadTask = storage.ref(`${userId}/images/${imageAsFile.name}`)
+      .put(imageAsFile)
+    //  initiates the firebase side uploading
+    uploadTask.on(
+      "state_changed",
+      (snapShot) => {
+        console.log(snapShot);
+      },
+      (err) => {
+        // dispatch error 
+        console.log(err);
+      },
+      async () => {
+        const storageResponse = await storage
+          .ref(`${userId}/images`)
+          .child(imageAsFile.name)
+          .getDownloadURL()
 
-      await storage.ref(`${userId}/images/temp_${randInt}`)
-        .putString(dataUri, 'data_url').then(async snap => {
+        const firebaseUrl = storageResponse ? storageResponse : {}
 
-          console.log("uploaded base64 image")
-          console.log(snap)
+        // save url in mongo
+        let data = {
+          src: firebaseUrl,
+          alt: imageAsFile.name,
+          innerTitle: title,
+          innerDetails: details,
+        };
 
-          const storageResponse = await storage
-            .ref(`${userId}/images`)
-            .child(`temp_${randInt}`)
-            .getDownloadURL()
+        setUploadedImage((prevObject) => ({
+          ...data,
+          ...prevObject,
+          imgUrl: firebaseUrl,
+        }));
 
-          const firebaseUrl = storageResponse ? storageResponse : {}
+        // Get predictions 
+        fetchData(firebaseUrl)
+      }
+    );
 
-          let data = {
-            src: firebaseUrl,
-            alt: imageAsFile.name,
-            innerTitle: title,
-            innerDetails: details,
-          };
 
-          // Save in db 
-          setUploadedImage((prevObject) => ({
-            ...data,
-            ...prevObject,
-            imgUrl: firebaseUrl,
-          }));
 
-          // Get predictions 
-          fetchData(firebaseUrl)
-        }).catch(err => console.log(err));
-
-    }
-
-    //initiates the firebase side uploading
-    // uploadTask.on(
-    //   "state_changed",
-    //   (snapShot) => {
-    //     console.log(snapShot);
-    //   },
-    //   (err) => {
-    //     // dispatch error 
-    //     console.log(err);
-    //   },
-    //   async () => {
-    //     const storageResponse = await storage
-    //       .ref(`${userId}/images`)
-    //       .child(imageAsFile.name)
-    //       .getDownloadURL()
-
-    //     const firebaseUrl = storageResponse ? storageResponse : {}
-
-    //     // save url in mongo
-    //     let data = {
-    //       src: firebaseUrl,
-    //       alt: imageAsFile.name,
-    //       innerTitle: title,
-    //       innerDetails: details,
-    //     };
-
-    //     setUploadedImage((prevObject) => ({
-    //       ...data,
-    //       ...prevObject,
-    //       imgUrl: firebaseUrl,
-    //     }));
-
-    //     // Get predictions 
-    //     fetchData(firebaseUrl)
-    //   }
-    // );
 
   };
 
@@ -183,12 +186,15 @@ const ImageUpload = () => {
   const handleTakePhoto = (dataUri) => {
     // Do stuff with the photo...
     setDataUri(dataUri);
-    handleFireBaseUpload()
+    handleCameraUpload(dataUri)
+
   }
 
   const handleCameraStop = () => {
     // toggleCamera(!useCamera)
   }
+
+
 
   return (
     <div className="image-upload container">
@@ -217,7 +223,7 @@ const ImageUpload = () => {
         {/* End generated titles */}
 
         <input type="file" onChange={handleImage} capture="camera" />
-        <Button type="submit">Add</Button>
+        <Button type="submit">Get results</Button>
       </form>
 
       <Button onClick={() => openCamera()}>Take photo</Button>
@@ -231,6 +237,7 @@ const ImageUpload = () => {
             isFullscreen
             idealFacingMode="environment"
             isSilentMode
+            isImageMirror
           />
         )
       }
