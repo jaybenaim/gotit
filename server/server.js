@@ -55,9 +55,9 @@ app.use(express.static(path.resolve(__dirname, "build")));
 app.use("/api", indexRouter);
 app.use('/api/images', images);
 
-app.get("*", (req, res) => {
-  res.sendFile("dist/index.html", { root: __dirname });
-});
+// app.get("*", (req, res) => {
+//   res.sendFile("dist/index.html", { root: __dirname });
+// });
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
