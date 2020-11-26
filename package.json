@@ -48,7 +48,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://jaybenaim.github.io/componentLibrary/",
+  "homepage": "https://jaybenaim.github.io/gotit/",
   "browserslist": [
     ">0.2%",
     "not dead",
