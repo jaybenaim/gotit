@@ -205,7 +205,6 @@ const ImageUpload = () => {
       )}
 
       <form onSubmit={handleFireBaseUpload}>
-        {/* Generate predicted title and description here */}
         <input
           name="setTitle"
           value={title}
@@ -220,9 +219,12 @@ const ImageUpload = () => {
           onChange={(e) => setDetails(e.target.value)}
           placeholder="Details"
         />
-        {/* End generated titles */}
 
-        <input type="file" onChange={handleImage} capture="camera" />
+        <label for="myfile">Open Camera:</label>
+        <input type="file" id="myfile" onChange={handleImage} capture="camera" />
+        <label for="myfile">Select a file:</label>
+        <input type="file" id="myfile" onChange={handleImage} accept="image/*" />
+
         <Button type="submit">Get results</Button>
       </form>
 
