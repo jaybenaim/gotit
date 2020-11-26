@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import "./imageUpload.scss"
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
+import Axios from "axios";
 
 
 const ImageUpload = () => {
@@ -30,13 +31,57 @@ const ImageUpload = () => {
   }
 
   const fetchData = async (url) => {
-    return await local.post("/images", { imgUrl: url }).then(response => {
-      if (response.data.length > 0) {
-        setPredictions(response.data)
-      } else {
-        setPredictions([{ name: 'No Matches' }])
+    const imageUrl = url
+    const modalId = "aaa03c23b3724a16a56b629203edc62c"
+
+    const response = await Axios.post(`https://api.clarifai.com/v2/models/${modalId}/outputs`, {
+      "inputs": [
+        {
+          "data": {
+            "image": {
+              "url": imageUrl
+            }
+          }
+        }
+      ],
+      "model": {
+        "output_info": {
+          "output_config": {
+            "max_concepts": 40,
+            "min_value": 0.987
+          }
+        }
+      }
+    }, {
+      headers: {
+        'Authorization': `Key ${process.env.REACT_APP_CLARIFAI_API_KEY}`
       }
     })
+
+
+    const concepts = response.data.outputs[0].data.concepts;
+
+    if (concepts.length > 0) {
+      const predictedConcepts = []
+
+      for (const concept of concepts) {
+        predictedConcepts.push({
+          name: concept.name,
+          value: concept.value
+        })
+      }
+
+      setPredictions(concepts)
+    }
+
+    // if server is deployed use this
+    // return await local.post("/images", { imgUrl: url }).then(response => {
+    //   if (response.data.length > 0) {
+    //     setPredictions(response.data)
+    //   } else {
+    //     setPredictions([{ name: 'No Matches' }])
+    //   }
+    // })
   }
 
 
