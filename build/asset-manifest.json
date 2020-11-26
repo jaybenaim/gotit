@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/componentLibrary/static/css/main.0364647e.chunk.css",
-    "main.js": "/componentLibrary/static/js/main.6802baac.chunk.js",
-    "main.js.map": "/componentLibrary/static/js/main.6802baac.chunk.js.map",
-    "runtime~main.js": "/componentLibrary/static/js/runtime~main.4696bb29.js",
-    "runtime~main.js.map": "/componentLibrary/static/js/runtime~main.4696bb29.js.map",
-    "static/css/2.c9e7500d.chunk.css": "/componentLibrary/static/css/2.c9e7500d.chunk.css",
-    "static/js/2.63817a09.chunk.js": "/componentLibrary/static/js/2.63817a09.chunk.js",
-    "static/js/2.63817a09.chunk.js.map": "/componentLibrary/static/js/2.63817a09.chunk.js.map",
-    "index.html": "/componentLibrary/index.html",
-    "precache-manifest.cffeeef3446ebb53c82ceae059d39633.js": "/componentLibrary/precache-manifest.cffeeef3446ebb53c82ceae059d39633.js",
-    "service-worker.js": "/componentLibrary/service-worker.js",
-    "static/css/2.c9e7500d.chunk.css.map": "/componentLibrary/static/css/2.c9e7500d.chunk.css.map",
-    "static/css/main.0364647e.chunk.css.map": "/componentLibrary/static/css/main.0364647e.chunk.css.map"
+    "main.css": "/gotit/static/css/main.0364647e.chunk.css",
+    "main.js": "/gotit/static/js/main.2d6e2b50.chunk.js",
+    "main.js.map": "/gotit/static/js/main.2d6e2b50.chunk.js.map",
+    "runtime~main.js": "/gotit/static/js/runtime~main.10b2e90a.js",
+    "runtime~main.js.map": "/gotit/static/js/runtime~main.10b2e90a.js.map",
+    "static/css/2.c9e7500d.chunk.css": "/gotit/static/css/2.c9e7500d.chunk.css",
+    "static/js/2.debe5647.chunk.js": "/gotit/static/js/2.debe5647.chunk.js",
+    "static/js/2.debe5647.chunk.js.map": "/gotit/static/js/2.debe5647.chunk.js.map",
+    "index.html": "/gotit/index.html",
+    "precache-manifest.bd6949439ccb4d7efb94767daa8b1464.js": "/gotit/precache-manifest.bd6949439ccb4d7efb94767daa8b1464.js",
+    "service-worker.js": "/gotit/service-worker.js",
+    "static/css/2.c9e7500d.chunk.css.map": "/gotit/static/css/2.c9e7500d.chunk.css.map",
+    "static/css/main.0364647e.chunk.css.map": "/gotit/static/css/main.0364647e.chunk.css.map"
   }
 }
