@@ -1,0 +1,15 @@
+{
+  "extends": "stylelint-config-standard",
+  "fix": true,
+  "rules": {
+    "indentation": 2,
+    "at-rule-name-case": "lower",
+    "at-rule-name-space-after": "always",
+    "at-rule-semicolon-newline-after": "always",
+    "comment-no-empty": true,
+    "comment-whitespace-inside": "always",
+    "color-hex-case": "lower",
+    "color-hex-length": "long",
+    "block-no-empty": null
+  }
+}
