@@ -1,6 +1,6 @@
 import { storage } from "config/firebase";
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
 import Axios from "axios";
@@ -14,6 +14,7 @@ const ImageUpload = () => {
   const [uploadedImage, setUploadedImage] = useState(allInputs);
 
   const userId = !auth.isEmpty ? auth.uid : undefined
+  const [isLoading, setLoading] = useState(false)
 
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
@@ -23,6 +24,7 @@ const ImageUpload = () => {
     const image = e.target.files[0];
 
     setImageAsFile(image);
+    handleFireBaseUpload(image)
   }
 
   const fetchData = async (url) => {
@@ -68,6 +70,7 @@ const ImageUpload = () => {
 
       setPredictions(concepts)
       setTitle(concepts[0].name)
+      setLoading(false)
     }
 
     // if server is deployed use this
@@ -117,9 +120,7 @@ const ImageUpload = () => {
 
   }
 
-  const handleFireBaseUpload = async (e) => {
-    e.preventDefault();
-
+  const handleFireBaseUpload = async (imageAsFile) => {
 
     // image loading
     if (imageAsFile === "") {
@@ -132,6 +133,7 @@ const ImageUpload = () => {
     uploadTask.on(
       "state_changed",
       (snapShot) => {
+        setLoading(!isLoading)
         console.log(snapShot);
       },
       (err) => {
@@ -184,6 +186,14 @@ const ImageUpload = () => {
         </div>
       )}
 
+      {
+        isLoading && (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        )
+      }
+
       <form onSubmit={handleFireBaseUpload}>
         <input
           name="setTitle"
@@ -201,15 +211,15 @@ const ImageUpload = () => {
         />
 
 
-        <label for="myfile">Select a file:</label>
+        <label htmlFor="myfile">Select a file:</label>
         <input type="file" id="myfile" onChange={handleImage} accept="image/*" />
 
-        <Button type="submit" disabled={uploadedImage.imgUrl === "" ? true : false}>Get results</Button>
+        {/* <Button type="submit" disabled={imageAsFile.name === "" ? true : false}>Get results</Button> */}
       </form>
 
 
 
-      <ul>
+      <ul >
         <p>Results</p>
         {results()}
       </ul>
