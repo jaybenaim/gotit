@@ -31,9 +31,9 @@ ReactDOM.render(
   <Provider store={store}>
     <ReactReduxFirebaseProvider {...rrfProps}>
       <BrowserRouter basename="gotit">
-        {/* <ErrorBoundary> */}
-        <App />
-        {/* </ErrorBoundary> */}
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </BrowserRouter>
     </ReactReduxFirebaseProvider>
   </Provider>,
