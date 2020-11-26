@@ -3,10 +3,7 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
-import Camera from 'react-html5-camera-photo';
-import 'react-html5-camera-photo/build/css/index.css';
 import Axios from "axios";
-import { useEffect } from "react";
 
 
 const ImageUpload = () => {
@@ -15,14 +12,12 @@ const ImageUpload = () => {
 
   const [imageAsFile, setImageAsFile] = useState("");
   const [uploadedImage, setUploadedImage] = useState(allInputs);
-  const [dataUri, setDataUri] = useState('');
 
   const userId = !auth.isEmpty ? auth.uid : undefined
 
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [predictions, setPredictions] = useState([])
-  const [useCamera, toggleCamera] = useState(false)
 
   const handleImage = (e) => {
     const image = e.target.files[0];
@@ -74,6 +69,7 @@ const ImageUpload = () => {
       setPredictions(concepts)
       setTitle(concepts[0].name)
     }
+
     // if server is deployed use this
     // return await local.post("/images", { imgUrl: url }).then(response => {
     //   if (response.data.length > 0) {
@@ -84,6 +80,7 @@ const ImageUpload = () => {
     // })
   }
 
+  // use for base64 encoded images 
   const handleCameraUpload = async (uri) => {
     const randInt = Math.floor(Math.random() * 1000000)
 
@@ -179,23 +176,6 @@ const ImageUpload = () => {
     })
   }
 
-  const openCamera = () => {
-    toggleCamera(!useCamera)
-  }
-
-  const handleTakePhoto = (dataUri) => {
-    // Do stuff with the photo...
-    setDataUri(dataUri);
-    handleCameraUpload(dataUri)
-
-  }
-
-  const handleCameraStop = () => {
-    // toggleCamera(!useCamera)
-  }
-
-
-
   return (
     <div className="image-upload container">
       {uploadedImage.src && (
@@ -220,29 +200,14 @@ const ImageUpload = () => {
           placeholder="Details"
         />
 
-        <label for="myfile">Open Camera:</label>
-        <input type="file" id="myfile" onChange={handleImage} capture="camera" />
+
         <label for="myfile">Select a file:</label>
         <input type="file" id="myfile" onChange={handleImage} accept="image/*" />
 
-        <Button type="submit">Get results</Button>
+        <Button type="submit" disabled={uploadedImage.imgUrl === "" ? true : false}>Get results</Button>
       </form>
 
-      <Button onClick={() => openCamera()}>Take photo</Button>
 
-      {
-        useCamera && (
-          <Camera
-            onTakePhoto={(dataUri) => { handleTakePhoto(dataUri) }}
-            onCameraStop={() => { handleCameraStop() }}
-            imageType="jpg"
-            isFullscreen
-            idealFacingMode="environment"
-            isSilentMode
-            isImageMirror
-          />
-        )
-      }
 
       <ul>
         <p>Results</p>
