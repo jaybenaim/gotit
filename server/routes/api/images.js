@@ -38,21 +38,36 @@ router.post("/", async (req, res) => {
 
   const concepts = response.data.outputs[0].data.concepts;
 
+  const invalidPredictions = [
+    'person',
+    'pet',
+    'dog',
+    'cat',
+    'canine',
+    'feline'
+  ]
+
   if (concepts.length > 0) {
     const predictedConcepts = []
 
     for (const concept of concepts) {
+      if (invalidPredictions.includes(concept.name)) {
+        res.send({ Error: "There are people in the picture, Please place the item infront of a white surface" })
+      }
+
       if (concept.name !== "no person") {
         predictedConcepts.push({
           name: concept.name,
           value: concept.value
         })
+      } else {
+        res.send({ Error: "No matches found" })
       }
     }
 
     res.send(predictedConcepts)
   } else {
-    res.send({ Error: "No results" })
+    res.send({ Error: "No matches found" })
     throw new Error("Invalid request")
   }
 })
