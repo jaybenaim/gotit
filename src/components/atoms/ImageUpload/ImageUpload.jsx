@@ -21,30 +21,6 @@ const ImageUpload = () => {
   const [details, setDetails] = useState("");
   const [predictions, setPredictions] = useState([])
 
-  const handleImage = (e) => {
-    const image = e.target.files[0];
-
-    setImageAsFile(image);
-    handleFireBaseUpload(image)
-  }
-
-  const fetchData = async (url) => {
-    // if server is deployed use this
-    return await local.post("/images", {
-      imgUrl: url,
-      minValue: 0.97,
-      limit: 5
-    }).then(response => {
-      if (response.data.length > 0) {
-        setPredictions(response.data)
-        setLoading(false)
-      } else {
-        setPredictions([{ name: 'No Matches' }])
-        setLoading(false)
-      }
-    })
-  }
-
   // use for base64 encoded images 
   // eslint-disable-next-line 
   const handleCameraUpload = async (uri) => {
@@ -81,6 +57,30 @@ const ImageUpload = () => {
         fetchData(firebaseUrl)
       }).catch(err => console.log(err));
 
+  }
+
+  const handleImage = (e) => {
+    const image = e.target.files[0];
+
+    setImageAsFile(image);
+    handleFireBaseUpload(image)
+  }
+
+  const fetchData = async (url) => {
+    // if server is deployed use this
+    return await local.post("/images", {
+      imgUrl: url,
+      minValue: 0.97,
+      limit: 5
+    }).then(response => {
+      if (response.data.length > 0) {
+        setPredictions(response.data)
+        setLoading(false)
+      } else {
+        setPredictions([{ name: 'No Matches' }])
+        setLoading(false)
+      }
+    })
   }
 
   const handleFireBaseUpload = async (imageAsFile) => {
@@ -137,15 +137,22 @@ const ImageUpload = () => {
 
   const results = () => {
     return predictions.length > 0 && predictions.map((prediction, index) => {
-      return (<li key={index}>{prediction.name}</li>)
+      return (<li key={index} >{prediction.name}</li>)
     })
   }
 
   return (
     <div className="image-upload container">
       {uploadedImage.src && (
-        <div>
-          <img src={uploadedImage.imgUrl} alt={uploadedImage.alt} height={400} width={400} />
+        <div
+          className="image-preview"
+        >
+          <img
+            src={uploadedImage.imgUrl || "https://firebasestorage.googleapis.com/v0/b/gotit-cbe1b.appspot.com/o/6AIP646ap4OE2WsRvXOkHypIs5R2%2Fimages%2F%24_0.PNG?alt=media&token=d28497d6-a0db-42f5-9a0a-c38a02a17387"}
+            alt={uploadedImage.alt}
+            height={400}
+            width={400}
+          />
         </div>
       )}
 
@@ -182,9 +189,10 @@ const ImageUpload = () => {
 
 
 
+      <h2>Results</h2>
       <ul className="image-upload__results">
-        <p>Results</p>
         {results()}
+        <li>test</li>
       </ul>
     </div >
   )
