@@ -27,7 +27,9 @@
     "redux-firestore": "^0.13.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "validator": "^13.0.0"
+    "validator": "^13.0.0",
+    "cors": "^2.8.5",
+    "clarifai-nodejs-grpc": "^6.11.0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,7 +48,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js src/**/*.jsx && npx stylelint '**.scss'",
     "predeploy": "npm run build",
-    "heroku-predeploy": "cd server && npm install",
+    "heroku-predeploy": "npm install && cd server && npm install",
     "deploy": "gh-pages -d build"
   },
   "homepage": "https://jaybenaim.github.io/gotit/",
