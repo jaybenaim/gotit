@@ -1,0 +1,19 @@
+
+
+.home {
+  .header {
+    padding: 10px; 
+
+    .jumbotron-fluid { 
+      margin: 0 auto; 
+      margin-top: 60px; 
+      text-align: center; 
+    }
+  }
+}
+
+@media (max-width: 768px) { 
+  .jumbotron-fluid { 
+    margin-top: 0 !important; 
+  }
+}

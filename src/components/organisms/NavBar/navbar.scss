@@ -1,0 +1,31 @@
+.navbar-default { 
+  background: #ffffff;
+  height: 40px;
+  position: absolute;
+  top: 0;
+  transition: top 0.6s ease-in-out;
+  width: 100%;
+
+  .skip-link a {
+    position: absolute;
+    left: -100px;
+    top: -100px;
+  }
+  
+  .skip-link a:focus {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    color: #ffffff;
+    background: #000000;
+  }
+}
+
+@media (max-width: 768px) { 
+  .navbar-default { 
+    top: -200px; 
+    transition: bottom 0.2s ease-in-out;
+  }
+} 

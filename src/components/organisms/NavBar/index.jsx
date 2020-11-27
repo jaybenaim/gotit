@@ -1,8 +1,9 @@
-﻿import React from "react";
-import styles from "./navbar.module.scss";
+﻿import React, { useState } from "react";
+import "./navbar.scss";
 import { useFirebase } from "react-redux-firebase";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const NavBar = () => {
   const firebase = useFirebase();
@@ -23,9 +24,10 @@ const NavBar = () => {
         console.log(error);
       });
   };
+
   return (
-    <React.Fragment>
-      <div className={styles.skipLink}>
+    <div className="navbar-default">
+      <div className="skip-link" hidden>
         <a href="#home">Skip to Main Content</a>
       </div>
       <nav className="navbar navbar-expand-sm navbar-light border-bottom justify-content-between">
@@ -55,7 +57,7 @@ const NavBar = () => {
             )}
         </div>
       </nav>
-    </React.Fragment>
+    </div>
   );
 };
 export default NavBar;

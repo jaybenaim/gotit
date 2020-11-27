@@ -182,10 +182,7 @@ const ImageUpload = () => {
           onChange={(e) => setDetails(e.target.value)}
           placeholder="Details"
         />
-        {/* <Button type="submit" disabled={imageAsFile.name === "" ? true : false}>Get results</Button> */}
       </form>
-
-
 
       <h2>Suggestions</h2>
       <ul className="image-upload__results">
