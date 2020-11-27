@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
-// import backend from "api/backend"
-import local from "api/local";
+import backend from "api/backend"
+// import local from "api/local";
 
 
 const ImageUpload = () => {
@@ -68,7 +68,7 @@ const ImageUpload = () => {
 
   const fetchData = async (url) => {
     // if server is deployed use this
-    return await local.post("/images", {
+    return await backend.post("/images", {
       imgUrl: url,
       minValue: 0.97,
       limit: 5
