@@ -46,6 +46,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js src/**/*.jsx && npx stylelint '**.scss'",
     "predeploy": "npm run build",
+    "heroku-predeploy": "cd server && npm install",
     "deploy": "gh-pages -d build"
   },
   "homepage": "https://jaybenaim.github.io/gotit/",
