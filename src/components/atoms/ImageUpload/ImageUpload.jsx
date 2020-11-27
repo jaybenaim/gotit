@@ -165,6 +165,9 @@ const ImageUpload = () => {
       }
 
       <form onSubmit={handleFireBaseUpload}>
+        <label htmlFor="myfile">Select a file:</label>
+        <input type="file" id="myfile" onChange={handleImage} accept="image/*" />
+
         <input
           name="setTitle"
           value={title}
@@ -179,20 +182,14 @@ const ImageUpload = () => {
           onChange={(e) => setDetails(e.target.value)}
           placeholder="Details"
         />
-
-
-        <label htmlFor="myfile">Select a file:</label>
-        <input type="file" id="myfile" onChange={handleImage} accept="image/*" />
-
         {/* <Button type="submit" disabled={imageAsFile.name === "" ? true : false}>Get results</Button> */}
       </form>
 
 
 
-      <h2>Results</h2>
+      <h2>Suggestions</h2>
       <ul className="image-upload__results">
         {results()}
-        <li>test</li>
       </ul>
     </div >
   )

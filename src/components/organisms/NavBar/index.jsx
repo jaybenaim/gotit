@@ -33,7 +33,7 @@ const NavBar = () => {
           react_starter_template
         </Link>
         <div className="navbar-nav">
-          <Link to="/home" className="nav-item nav-link active">
+          <Link to="/" className="nav-item nav-link active">
             Home
           </Link>
           {isLoggedIn ? (
