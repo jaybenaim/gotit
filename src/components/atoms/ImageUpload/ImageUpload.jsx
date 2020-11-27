@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
-import Axios from "axios";
-import local from "api/local"
-import backend from "api/backend"
+// import backend from "api/backend"
+import local from "api/local";
 
 
 const ImageUpload = () => {
@@ -30,53 +29,12 @@ const ImageUpload = () => {
   }
 
   const fetchData = async (url) => {
-    // const imageUrl = url
-    // const modalId = "aaa03c23b3724a16a56b629203edc62c"
-
-    // const response = await Axios.post(`https://api.clarifai.com/v2/models/${modalId}/outputs`, {
-    //   "inputs": [
-    //     {
-    //       "data": {
-    //         "image": {
-    //           "url": imageUrl
-    //         }
-    //       }
-    //     }
-    //   ],
-    //   "model": {
-    //     "output_info": {
-    //       "output_config": {
-    //         "max_concepts": 40,
-    //         "min_value": 0.987
-    //       }
-    //     }
-    //   }
-    // }, {
-    //   headers: {
-    //     'Authorization': `Key ${process.env.REACT_APP_CLARIFAI_API_KEY}`
-    //   }
-    // })
-
-
-    // const concepts = response.data.outputs[0].data.concepts;
-
-    // if (concepts.length > 0) {
-    //   const predictedConcepts = []
-
-    //   for (const concept of concepts) {
-    //     predictedConcepts.push({
-    //       name: concept.name,
-    //       value: concept.value
-    //     })
-    //   }
-
-    //   setPredictions(concepts)
-    //   setTitle(concepts[0].name)
-    //   setLoading(false)
-    // }
-
     // if server is deployed use this
-    return await backend.post("/images", { imgUrl: url }).then(response => {
+    return await local.post("/images", {
+      imgUrl: url,
+      minValue: 0.97,
+      limit: 5
+    }).then(response => {
       if (response.data.length > 0) {
         setPredictions(response.data)
         setLoading(false)
@@ -88,6 +46,7 @@ const ImageUpload = () => {
   }
 
   // use for base64 encoded images 
+  // eslint-disable-next-line 
   const handleCameraUpload = async (uri) => {
     const randInt = Math.floor(Math.random() * 1000000)
 
@@ -223,7 +182,7 @@ const ImageUpload = () => {
 
 
 
-      <ul >
+      <ul className="image-upload__results">
         <p>Results</p>
         {results()}
       </ul>
