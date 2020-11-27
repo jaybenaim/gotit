@@ -4,6 +4,7 @@ import { Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
 import backend from "api/backend"
+import Icon from "components/atoms/Icon/Icon";
 // import local from "api/local";
 
 
@@ -165,8 +166,16 @@ const ImageUpload = () => {
       }
 
       <form onSubmit={handleFireBaseUpload}>
-        <label htmlFor="myfile">Select a file:</label>
-        <input type="file" id="myfile" onChange={handleImage} accept="image/*" />
+        <label htmlFor="myfile" className="upload-label">
+          <Icon />
+        </label>
+
+        <input
+          type="file"
+          id="myfile"
+          className="upload-input"
+          onChange={handleImage}
+          accept="image/*" />
 
         <input
           name="setTitle"
