@@ -79,8 +79,10 @@ const ImageUpload = () => {
     return await backend.post("/images", { imgUrl: url }).then(response => {
       if (response.data.length > 0) {
         setPredictions(response.data)
+        setLoading(false)
       } else {
         setPredictions([{ name: 'No Matches' }])
+        setLoading(false)
       }
     })
   }
