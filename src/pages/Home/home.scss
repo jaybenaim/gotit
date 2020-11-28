@@ -12,8 +12,8 @@
   }
 }
 
-@media (max-width: 768px) { 
+@media (max-width: 989px) { 
   .jumbotron-fluid { 
-    margin-top: 0 !important; 
+    display: none;
   }
 }

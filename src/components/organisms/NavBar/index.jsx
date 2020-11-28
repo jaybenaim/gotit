@@ -1,9 +1,8 @@
-﻿import React, { useState } from "react";
+﻿import React from "react";
 import "./navbar.scss";
 import { useFirebase } from "react-redux-firebase";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 
 const NavBar = () => {
   const firebase = useFirebase();

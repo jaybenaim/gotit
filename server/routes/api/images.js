@@ -47,7 +47,7 @@ router.post("/", async (req, res) => {
     'feline'
   ]
 
-  if (concepts.length > 0) {
+  if (concepts && concepts.length > 0) {
     const predictedConcepts = []
 
     for (const concept of concepts) {
