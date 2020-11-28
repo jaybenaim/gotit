@@ -121,18 +121,20 @@ const ImageUpload = () => {
       views: 0,
       likes: 0,
       user: {
-        id: auth.uid,
+        id: userId,
         profile
       }
     }
 
     const postResponse = await firestore.collection('posts').add(post)
 
-    await firestore.collection('posts').doc(postResponse.id).update({
-      id: postResponse.id
-    })
+    if (postResponse) {
+      await firestore.collection('posts').doc(postResponse.id).update({
+        id: postResponse.id
+      })
+      post.id = postResponse.id
+    }
 
-    post.id = postResponse.id
 
     if (post.id) {
       setPost(post)

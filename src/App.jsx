@@ -19,6 +19,9 @@ const App = () => {
         <PrivateRoute exact path="/admin">
           <AdminHome />
         </PrivateRoute>
+        <PrivateRoute exact path="/">
+          <Home />
+        </PrivateRoute>
         <Route exact path="/" component={Home} />
         <Route exact path="/sign-in" component={SignIn} />
         <Route exact path="/sign-up" component={SignUp} />
