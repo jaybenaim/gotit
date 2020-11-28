@@ -106,7 +106,7 @@ $primary: #007bff;
 }
 
 @media (max-width: 989px) {
-  .image-upload {
-    zoom: 3.2;
+  .image-upload > * {
+    zoom: 1.2;
   }
 }
