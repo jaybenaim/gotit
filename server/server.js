@@ -6,6 +6,7 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const images = require("./routes/api/images");
 const predictions = require("./routes/api/predictions");
+const descriptions = require("./routes/api/descriptions");
 const cors = require("cors");
 const CONSTANTS = require("./constants");
 const { PORT: port } = CONSTANTS;
@@ -55,7 +56,10 @@ app.use(cookieParser());
 // Routes
 app.use("/api", indexRouter);
 app.use('/api/images', images);
-app.use("/api/predictions", predictions)
+app.use("/api/predictions", predictions);
+app.use("/api/descriptions", descriptions);
+
+
 
 // app.get("*", (req, res) => {
 //   res.sendFile("dist/index.html", { root: __dirname });

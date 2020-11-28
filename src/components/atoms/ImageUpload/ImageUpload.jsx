@@ -10,6 +10,7 @@ import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
 import { Redirect, withRouter } from "react-router-dom";
 import AutoComplete from "../AutoComplete/AutoComplete";
+import local from "api/local";
 
 const ImageUpload = () => {
   const firestore = useFirestore()
@@ -111,7 +112,7 @@ const ImageUpload = () => {
 
   const handleSavePost = async (e) => {
     e.preventDefault()
-
+    console.log("save post ")
     const currentPost = {
       src: uploadedImage.imgUrl,
       title,
@@ -124,27 +125,94 @@ const ImageUpload = () => {
       user: {
         id: userId,
         profile
-      }
+      },
     }
 
     const postResponse = await firestore.collection('posts').add(currentPost)
 
-    if (postResponse) {
+    if (postResponse.id) {
       await firestore.collection('posts').doc(postResponse.id).update({
         id: postResponse.id
       })
+
       currentPost.id = postResponse.id
+      console.log(currentPost)
+      setPost(currentPost)
     }
 
-
-    if (postResponse.id) {
-      setPost(post)
-    }
   }
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (value) => {
+    setTitle(value)
+  }
+
+  const [categories, setCategories] = useState()
+  const [suggestedKeywords, setSuggestedKeywords] = useState()
+  const [suggestedDescriptions, setSuggestedDescriptions] = useState()
+  const [synoyms, setSynonyms] = useState()
+
+  const handleDescriptionSuggestionClick = (suggestion) => {
+
+    setDescription(`${description}, ${suggestion}`)
+  }
+
+  const descriptionEls = () => {
+    const categoriesEls = categories && categories.map((category, i) => (
+      <ListGroup.Item
+        key={i}
+        onClick={() => handleDescriptionSuggestionClick(category)}
+      >
+        {category}
+      </ListGroup.Item>
+    ))
+
+    const keywordEls = suggestedKeywords && suggestedKeywords.map((keyword, i) => (
+      <ListGroup.Item
+        key={i}
+        onClick={() => handleDescriptionSuggestionClick(keyword)}
+      >
+        {keyword}
+      </ListGroup.Item>
+    ))
+
+    const descriptionEls = suggestedDescriptions && suggestedDescriptions.map((descriptionSuggestion, i) => (
+      <ListGroup.Item
+        key={i}
+        onClick={() => handleDescriptionSuggestionClick(descriptionSuggestion)}
+      >
+        {descriptionSuggestion}
+      </ListGroup.Item>
+    ))
+
+    const synoymEls = synoyms && synoyms.map((synoym, i) => (
+      <ListGroup.Item
+        key={i}
+        onClick={() => handleDescriptionSuggestionClick(synoym)}
+      >
+        {synoym}
+      </ListGroup.Item>
+    ))
+
+    return (
+      <ListGroup>
+        {categoriesEls}
+        {keywordEls}
+        {descriptionEls}
+        {synoymEls}
+      </ListGroup>
+    )
+  }
+
+  const getDescriptionSuggestions = async (e) => {
     e.preventDefault()
-    setTitle(e.target.value)
+    const descriptionSuggestions = await local.get(`descriptions?search=${encodeURI(title)}`)
+
+    const { categories, keywords, suggestedDescriptions, synonyms } = descriptionSuggestions.data
+
+    setCategories(categories)
+    setSuggestedKeywords(keywords)
+    setSuggestedDescriptions(suggestedDescriptions)
+    setSynonyms(synonyms)
   }
 
   if (post && post.id) {
@@ -187,8 +255,6 @@ const ImageUpload = () => {
         </Spinner>
       )}
 
-
-
       <Form onSubmit={handleSavePost} className="image-upload__form">
 
         <AutoComplete
@@ -197,10 +263,11 @@ const ImageUpload = () => {
           classname="input-group-text title"
           placeholder="Title"
           label="Title"
-          onChange={(e) => handleTitleChange(e)}
+          handleTitleChange={handleTitleChange}
           handleClick={(title) => setTitle(title)}
           parentClass="image-upload__form"
           isForm={false}
+          disabled
         />
 
         <Form.Group controlId="description" >
@@ -217,6 +284,10 @@ const ImageUpload = () => {
           />
         </Form.Group>
 
+        {descriptionEls()}
+
+        <Button onClick={(e) => getDescriptionSuggestions(e)}>Get Description Suggestions</Button>
+
         <Form.Group controlId="price">
           <Form.Label>CAD $</Form.Label>
 
@@ -232,7 +303,7 @@ const ImageUpload = () => {
         <Button
           type="submit"
           variant="secondary"
-          disabled={!title || !price || !uploadedImage.imgUrl}
+          disabled={!title || !price}
         >
           Sell Item
         </Button>
