@@ -25,20 +25,21 @@ const NavBar = () => {
       });
   };
 
-  const [visible, setVisibility] = useState(false);
-  const [pathName, setPathName] = useState(false);
+  // const [visible, setVisibility] = useState(true);
+  const [pathName, setPathName] = useState("/gotit/");
 
   useEffect(() => {
-    const pathName = window.location.pathname
-    if (pathName !== "/") {
-      setVisibility(true)
-      setPathName(pathName)
-    }
+    //   const pathName = window.location.pathname
 
-  }, [window.location.pathname])
+    // if (pathName !== "/gotit/") {
+    //   setVisibility(true)
+    setPathName(pathName)
+    // }
+
+  }, [pathName])
 
   return (
-    <div className={visible ? "navbar-default navbar-default--show" : "navbar-default"}>
+    <div className={"navbar-default"}>
       <div className="skip-link" hidden>
         <a href="#home">Skip to Main Content</a>
       </div>

@@ -8,18 +8,15 @@ import Icon from "components/atoms/Icon/Icon";
 import Heading from "components/atoms//Heading/Heading";
 import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
-import { Redirect, useHistory, withRouter } from "react-router-dom";
-import { propTypes } from "react-bootstrap/esm/Image";
+import { Redirect, withRouter } from "react-router-dom";
 // import local from "api/local";
 
 const ImageUpload = () => {
   const firestore = useFirestore()
-  const history = useHistory()
 
   const { auth, profile } = useSelector((state) => state.firebase)
   const allInputs = { imgUrl: "" };
 
-  const [imageAsFile, setImageAsFile] = useState("");
   const [uploadedImage, setUploadedImage] = useState(allInputs);
 
   const userId = !auth.isEmpty ? auth.uid : undefined
@@ -34,7 +31,6 @@ const ImageUpload = () => {
   const handleImage = (e) => {
     const image = e.target.files[0];
 
-    setImageAsFile(image);
     handleFireBaseUpload(image)
   }
 
@@ -168,7 +164,7 @@ const ImageUpload = () => {
           className="image-preview"
         >
           <img
-            src={uploadedImage.imgUrl || "https://firebasestorage.googleapis.com/v0/b/gotit-cbe1b.appspot.com/o/6AIP646ap4OE2WsRvXOkHypIs5R2%2Fimages%2F%24_0.PNG?alt=media&token=d28497d6-a0db-42f5-9a0a-c38a02a17387"}
+            src={uploadedImage.imgUrl}
             alt={uploadedImage.alt}
             height={400}
             width={400}
