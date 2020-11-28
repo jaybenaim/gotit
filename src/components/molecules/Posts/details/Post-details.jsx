@@ -7,7 +7,6 @@ import "./post-details.scss"
 const PostDetails = ({ location }) => {
   const postId = post ? post.id : location.pathname.replace("/posts/", "")
 
-  console.log(postId)
   useFirestoreConnect([
     {
       collection: 'posts',
