@@ -13,9 +13,11 @@ const AutoComplete = ({
   placeholder = "Search...",
   label = "Search:",
   handleClick,
+  handleTitleChange,
   parentClass,
   isForm = true,
-  value
+  value,
+  disabled = false
 }) => {
 
   const [autoCompleteResults, setAutoCompleteResults] = useState()
@@ -23,25 +25,27 @@ const AutoComplete = ({
   const [query, setQuery] = useState()
 
   const handleAutoComplete = async (query) => {
-    if (query.length > 3) {
+    if (!disabled) {
+      if (query.length > 3) {
 
-      const results = await dataMuse.get(`sug?s=${query}`)
+        const results = await dataMuse.get(`sug?s=${query}`)
 
-      if (results) {
+        if (results) {
 
-        const words = []
+          const words = []
 
-        for (const result of results.data) {
-          if (result.score > 992) {
-            words.push(result)
+          for (const result of results.data) {
+            if (result.score > 992) {
+              words.push(result)
+            }
           }
+
+          setAutoCompleteResults(words)
         }
 
-        setAutoCompleteResults(words)
+      } else {
+        setAutoCompleteResults([])
       }
-
-    } else {
-      setAutoCompleteResults([])
     }
 
   }
@@ -52,6 +56,7 @@ const AutoComplete = ({
     const value = e.target.value
     handleAutoComplete(value)
     setQuery(value)
+    handleTitleChange(value)
   }
 
   const handleResultClick = (result) => {
@@ -97,7 +102,6 @@ const AutoComplete = ({
         </Form>
       ) : (
           <div className={parentClass}>
-
             <Form.Group controlId={name}>
               <Form.Label>{label}</Form.Label>
 
@@ -113,9 +117,11 @@ const AutoComplete = ({
           </div>
         )}
 
-      <div className="auto-complete__results">
-        {autoCompleteResultElems()}
-      </div>
+      {!disabled && (
+        <div className="auto-complete__results">
+          {autoCompleteResultElems()}
+        </div>
+      )}
     </div>
   )
 }
