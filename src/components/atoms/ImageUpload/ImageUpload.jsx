@@ -1,16 +1,22 @@
 import { storage } from "config/firebase";
 import React, { useState } from "react";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
 import backend from "api/backend"
 import Icon from "components/atoms/Icon/Icon";
 import Heading from "components/atoms//Heading/Heading";
 import { capitalize } from "helpers/textFunctions";
+import { useFirestore } from "react-redux-firebase";
+import { Redirect, useHistory, withRouter } from "react-router-dom";
+import { propTypes } from "react-bootstrap/esm/Image";
 // import local from "api/local";
 
 const ImageUpload = () => {
-  const auth = useSelector((state) => state.firebase.auth)
+  const firestore = useFirestore()
+  const history = useHistory()
+
+  const { auth, profile } = useSelector((state) => state.firebase)
   const allInputs = { imgUrl: "" };
 
   const [imageAsFile, setImageAsFile] = useState("");
@@ -20,47 +26,9 @@ const ImageUpload = () => {
   const [isLoading, setLoading] = useState(false)
 
   const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
+  const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0)
   const [predictions, setPredictions] = useState([])
-
-  // use for base64 encoded images 
-  // eslint-disable-next-line 
-  const handleCameraUpload = async (uri) => {
-    const randInt = Math.floor(Math.random() * 1000000)
-
-    await storage.ref(`${userId}/images/temp_${randInt}`)
-      .putString(uri, 'data_url').then(async snap => {
-
-        console.log("uploaded base64 image")
-        console.log(snap)
-
-        const storageResponse = await storage
-          .ref(`${userId}/images`)
-          .child(`temp_${randInt}`)
-          .getDownloadURL()
-
-        const firebaseUrl = storageResponse ? storageResponse : {}
-
-        let data = {
-          src: firebaseUrl,
-          alt: imageAsFile.name,
-          innerTitle: title,
-          innerDetails: details,
-        };
-
-        // Save in db 
-        setUploadedImage((prevObject) => ({
-          ...data,
-          ...prevObject,
-          imgUrl: firebaseUrl,
-        }));
-
-        // Get predictions 
-        fetchPredictions(firebaseUrl)
-      }).catch(err => console.log(err));
-
-  }
 
   const handleImage = (e) => {
     const image = e.target.files[0];
@@ -102,7 +70,7 @@ const ImageUpload = () => {
           src: firebaseUrl,
           alt: imageAsFile.name,
           innerTitle: title,
-          innerDetails: details,
+          innerdescription: description,
         };
 
         setUploadedImage((prevObject) => ({
@@ -143,8 +111,29 @@ const ImageUpload = () => {
     })
   }
 
-  const handleSavePost = () => {
+  const handleSavePost = async (e) => {
+    e.preventDefault()
 
+    const post = {
+      title,
+      description,
+      price,
+      dateCreated: new Date(),
+      isAvailable: true,
+      views: 0,
+      likes: 0,
+      user: {
+        id: auth.uid,
+        profile
+      }
+    }
+
+    const postResponse = await firestore.collection('posts').add(post)
+
+    return history.push({
+      pathname: `/posts/${postResponse.id}`,
+      state: post
+    })
   }
 
   return (
@@ -153,11 +142,13 @@ const ImageUpload = () => {
         headingText="Create Post"
         classname="image-upload__title"
       />
+
       <div
         className="image-upload__sub-title"
       >
         <em>Title auto-generates after uploading a picture</em>
       </div>
+
       {uploadedImage.src && (
         <div
           className="image-preview"
@@ -171,13 +162,11 @@ const ImageUpload = () => {
         </div>
       )}
 
-      {
-        isLoading && (
-          <Spinner animation="border" role="status" className="image-upload__loader">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        )
-      }
+      {isLoading && (
+        <Spinner animation="border" role="status" className="image-upload__loader">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      )}
 
       <form onSubmit={handleSavePost} className="image-upload__form">
         <input
@@ -189,11 +178,11 @@ const ImageUpload = () => {
         />
 
         <textarea
-          className="input-group-text details"
+          className="input-group-text description"
           name="title"
-          value={details}
-          onChange={(e) => setDetails(e.target.value)}
-          placeholder="Details"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="description"
         />
 
         <div className="image-upload__form__price-container">
@@ -208,6 +197,14 @@ const ImageUpload = () => {
             min="1"
           />
         </div>
+
+        <Button
+          type="submit"
+          variant="secondary"
+          disabled={!title || !price || !uploadedImage.imgUrl}
+        >
+          Sell Item
+        </Button>
       </form>
 
       <h2>Suggestions</h2>
@@ -230,11 +227,9 @@ const ImageUpload = () => {
           accept="image/*"
         />
       </form>
-
-
-    </div >
+    </div>
   )
 }
 
 
-export default ImageUpload;
+export default withRouter(ImageUpload);

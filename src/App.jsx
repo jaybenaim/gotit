@@ -11,15 +11,17 @@ import AdminHome from "pages/Admin/AdminHome/AdminHome";
 
 const App = () => {
   return (
-    <React.Fragment >
+    <React.Fragment>
       <NavBar />
       <Switch>
         <PrivateRoute exact path="/admin">
           <AdminHome />
         </PrivateRoute>
-        <Route path="/" component={Home} />
-        <Route path="/sign-in" component={SignIn} />
-        <Route path="/sign-up" component={SignUp} />
+        <Route exact path="/" component={Home} />
+        <Route exact path="/sign-in" component={SignIn} />
+        <Route exact path="/sign-up" component={SignUp} />
+        <Route exact path="/posts" component={Home} />
+        <Route exact path="/posts/:id" render={(props) => <SignIn {...props} />} />
       </Switch>
     </React.Fragment>
   );
