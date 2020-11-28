@@ -27,7 +27,6 @@ const ImageUpload = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0)
 
-
   const [predictions, setPredictions] = useState([])
 
   const [post, setPost] = useState()

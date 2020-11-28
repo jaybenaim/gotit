@@ -1,4 +1,7 @@
 // use for base64 encoded images 
+
+import { storage } from "firebase";
+
 // eslint-disable-next-line 
 const handleCameraUpload = async (uri) => {
   const randInt = Math.floor(Math.random() * 1000000)
