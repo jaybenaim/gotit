@@ -14,7 +14,8 @@ const Home = (props) => {
     if (dbIsActive !== 'active') {
       props.wakeDb()
     }
-  }, [dbIsActive])
+    // eslint-disable-next-line 
+  }, [])
 
   return (
     <main id="home" className="home">
