@@ -1,9 +1,9 @@
 import backend from "api/backend";
-import local from "api/local";
+// import local from "api/local";
 import { GET_ERRORS, SET_DB_STATUS } from "../types";
 
 export const wakeDb = () => (dispatch) => {
-  local
+  backend
     .get("/")
     .then(res => {
       dispatch(setDbStatus(res.data.status))

@@ -1,7 +1,7 @@
 import { storage } from "config/firebase";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, ListGroup, Spinner } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import "./imageUpload.scss"
 import backend from "api/backend"
 import Icon from "components/atoms/Icon/Icon";
@@ -10,9 +10,10 @@ import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
 import { Redirect, withRouter } from "react-router-dom";
 import AutoComplete from "../AutoComplete/AutoComplete";
-import local from "api/local";
+import { wakeDb } from "redux/actions/dbActions"
+// import local from "api/local";
 
-const ImageUpload = () => {
+const ImageUpload = (props) => {
   const firestore = useFirestore()
   const [isLoading, setLoading] = useState(false)
 
@@ -29,6 +30,15 @@ const ImageUpload = () => {
   const [predictions, setPredictions] = useState([])
 
   const [post, setPost] = useState()
+
+  const dbIsActive = useSelector(state => state.db.status)
+
+  useEffect(() => {
+    if (dbIsActive !== 'active') {
+      props.wakeDb()
+    }
+    // eslint-disable-next-line 
+  }, [])
 
   const handleImage = (e) => {
     const image = e.target.files[0];
@@ -205,7 +215,7 @@ const ImageUpload = () => {
 
   const getDescriptionSuggestions = async (e) => {
     e.preventDefault()
-    const descriptionSuggestions = await local.get(`descriptions?search=${encodeURI(title)}`)
+    const descriptionSuggestions = await backend.get(`descriptions?search=${encodeURI(title)}`)
 
     const { categories, keywords, suggestedDescriptions, synonyms } = descriptionSuggestions.data
 
@@ -337,4 +347,5 @@ const ImageUpload = () => {
 }
 
 
-export default withRouter(ImageUpload);
+export default withRouter(connect(() => { return {} }, { wakeDb })(ImageUpload));
+
