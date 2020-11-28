@@ -9,7 +9,7 @@ import Heading from "components/atoms//Heading/Heading";
 import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
 import { Redirect, withRouter } from "react-router-dom";
-// import local from "api/local";
+import local from "api/local";
 
 const ImageUpload = () => {
   const firestore = useFirestore()
@@ -111,7 +111,7 @@ const ImageUpload = () => {
   const handleSavePost = async (e) => {
     e.preventDefault()
 
-    const post = {
+    const currentPost = {
       src: uploadedImage.imgUrl,
       title,
       description,
@@ -126,28 +126,29 @@ const ImageUpload = () => {
       }
     }
 
-    const postResponse = await firestore.collection('posts').add(post)
+    const postResponse = await firestore.collection('posts').add(currentPost)
 
     if (postResponse) {
       await firestore.collection('posts').doc(postResponse.id).update({
         id: postResponse.id
       })
-      post.id = postResponse.id
+      currentPost.id = postResponse.id
     }
 
 
-    if (post.id) {
+    if (postResponse.id) {
       setPost(post)
     }
   }
 
-  if (post) {
+  if (post && post.id) {
     return (<Redirect to={{
       pathname: `/posts/${post.id}`,
       state: post
     }} />)
 
   }
+
   return (
     <div className="image-upload container">
       <Heading
