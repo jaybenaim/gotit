@@ -29,6 +29,7 @@ const ImageUpload = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0)
   const [predictions, setPredictions] = useState([])
+  const [post, setPost] = useState()
 
   const handleImage = (e) => {
     const image = e.target.files[0];
@@ -112,7 +113,7 @@ const ImageUpload = () => {
   }
 
   const handleSavePost = async (e) => {
-    e.preventDefault()
+    // e.preventDefault()
 
     const post = {
       title,
@@ -129,13 +130,18 @@ const ImageUpload = () => {
     }
 
     const postResponse = await firestore.collection('posts').add(post)
+    post.id = postResponse.id
 
-    return history.push({
-      pathname: `/posts/${postResponse.id}`,
-      state: post
-    })
+    setPost(post)
   }
 
+  if (post) {
+    return (<Redirect to={{
+      pathname: `/posts/${post.id}`,
+      state: post
+    }} />)
+
+  }
   return (
     <div className="image-upload container">
       <Heading
@@ -206,7 +212,14 @@ const ImageUpload = () => {
           Sell Item
         </Button>
       </form>
-
+      <Button
+        type="submit"
+        variant="secondary"
+        onClick={() => handleSavePost()}
+      // disabled={!title || !price || !uploadedImage.imgUrl}
+      >
+        Sell Item
+        </Button>
       <h2>Suggestions</h2>
       <ul className="image-upload__results">
         {results()}
