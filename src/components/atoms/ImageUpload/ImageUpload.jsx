@@ -57,7 +57,7 @@ const ImageUpload = () => {
         }));
 
         // Get predictions 
-        fetchData(firebaseUrl)
+        fetchPredictions(firebaseUrl)
       }).catch(err => console.log(err));
 
   }
@@ -69,23 +69,7 @@ const ImageUpload = () => {
     handleFireBaseUpload(image)
   }
 
-  const fetchData = async (url) => {
-    // if server is deployed use this
-    return await backend.post("/images", {
-      imgUrl: url,
-      minValue: 0.97,
-      limit: 5
-    }).then(response => {
-      if (response.data.length > 0) {
-        setPredictions(response.data)
-        setLoading(false)
-        setTitle(response.data[0].name)
-      } else {
-        setPredictions([{ name: 'No Matches' }])
-        setLoading(false)
-      }
-    })
-  }
+
 
   const handleFireBaseUpload = async (imageAsFile) => {
 
@@ -130,24 +114,46 @@ const ImageUpload = () => {
         }));
 
         // Get predictions 
-        fetchData(firebaseUrl)
+        fetchPredictions(firebaseUrl)
       }
     );
-
-
-
-
   };
+
+  const fetchPredictions = async (url) => {
+    // if server is deployed use this
+    return await backend.post("/images", {
+      imgUrl: url,
+      minValue: 0.97,
+      limit: 5
+    }).then(response => {
+      if (response.data.length > 0) {
+        setPredictions(response.data)
+        setLoading(false)
+        setTitle(capitalize(response.data[0].name))
+      } else {
+        setPredictions([{ name: 'No Matches' }])
+        setLoading(false)
+      }
+    })
+  }
+
+  const capitalize = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+
+  }
 
   const results = () => {
     return predictions.length > 0 && predictions.map((prediction, index) => {
-      return (<li key={index} >{prediction.name}</li>)
+      return (<li key={index} onClick={() =>
+        setTitle(capitalize(prediction.name))
+      }>{capitalize(prediction.name)}</li>)
     })
   }
 
   const handleSavePost = () => {
 
   }
+
   return (
     <div className="image-upload container">
       <Heading
@@ -159,7 +165,6 @@ const ImageUpload = () => {
       >
         <em>Title auto-generates after uploading a picture</em>
       </div>
-
       {uploadedImage.src && (
         <div
           className="image-preview"
