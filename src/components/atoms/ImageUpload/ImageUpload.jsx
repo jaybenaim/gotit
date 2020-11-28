@@ -1,6 +1,6 @@
 import { storage } from "config/firebase";
 import React, { useState } from "react";
-import { Button, Spinner } from "react-bootstrap";
+import { Button, Form, ListGroup, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import "./imageUpload.scss"
 import backend from "api/backend"
@@ -9,23 +9,27 @@ import Heading from "components/atoms//Heading/Heading";
 import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
 import { Redirect, withRouter } from "react-router-dom";
-import local from "api/local";
+// import local from "api/local";
+import Axios from "axios";
+import AutoComplete from "../AutoComplete/AutoComplete";
 
 const ImageUpload = () => {
   const firestore = useFirestore()
-
-  const { auth, profile } = useSelector((state) => state.firebase)
-  const allInputs = { imgUrl: "" };
-
-  const [uploadedImage, setUploadedImage] = useState(allInputs);
-
-  const userId = !auth.isEmpty ? auth.uid : undefined
   const [isLoading, setLoading] = useState(false)
 
+  const { auth, profile } = useSelector((state) => state.firebase)
+  const userId = !auth.isEmpty ? auth.uid : undefined
+
+  // Form
+  const allInputs = { imgUrl: "" };
+  const [uploadedImage, setUploadedImage] = useState(allInputs);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0)
+
+
   const [predictions, setPredictions] = useState([])
+
   const [post, setPost] = useState()
 
   const handleImage = (e) => {
@@ -141,6 +145,11 @@ const ImageUpload = () => {
     }
   }
 
+  const handleTitleChange = (e) => {
+    e.preventDefault()
+    setTitle(e.target.value)
+  }
+
   if (post && post.id) {
     return (<Redirect to={{
       pathname: `/posts/${post.id}`,
@@ -181,35 +190,47 @@ const ImageUpload = () => {
         </Spinner>
       )}
 
-      <form onSubmit={handleSavePost} className="image-upload__form">
-        <input
-          className="input-group-text title"
-          name="title"
+
+
+      <Form onSubmit={handleSavePost} className="image-upload__form">
+
+        <AutoComplete
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-        />
-
-        <textarea
-          className="input-group-text description"
           name="title"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="description"
+          classname="input-group-text title"
+          placeholder="Title"
+          label="Title"
+          onChange={(e) => handleTitleChange(e)}
+          handleClick={(title) => setTitle(title)}
+          parentClass="image-upload__form"
+          isForm={false}
         />
 
-        <div className="image-upload__form__price-container">
-          <label htmlFor="price" className="price-label">CAD $</label>
-          <input
+        <Form.Group controlId="description" >
+          <Form.Label>Description: </Form.Label>
+
+          <Form.Control
+            as="textarea"
+            rows={3}
+            className="input-group-text description"
+            name="title"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="description"
+          />
+        </Form.Group>
+
+        <Form.Group controlId="price">
+          <Form.Label>CAD $</Form.Label>
+
+          <Form.Control
             className="input-group-number price"
-            id="price"
             name="price"
             value={price}
             onChange={({ target: { value } }) => setPrice(value)}
             type="number"
-            min="1"
-          />
-        </div>
+            min="1" />
+        </Form.Group>
 
         <Button
           type="submit"
@@ -218,28 +239,31 @@ const ImageUpload = () => {
         >
           Sell Item
         </Button>
-      </form>
+      </Form>
 
       <h2>Suggestions</h2>
       <ul className="image-upload__results">
         {results()}
       </ul>
 
-      <form
+      <Form
         onSubmit={handleFireBaseUpload} className="image-upload__form"
       >
-        <label htmlFor="myfile" className="upload-label">
-          <Icon />
-        </label>
+        <Form.Group
+          controlId="upload"
+        >
+          <Form.Label className="upload-label">
+            <Icon />
+          </Form.Label>
 
-        <input
-          className="input-group-file image upload-input"
-          type="file"
-          id="myfile"
-          onChange={handleImage}
-          accept="image/*"
-        />
-      </form>
+          <Form.Control
+            className="input-group-file image upload-input"
+            type="file"
+            onChange={handleImage}
+            accept="image/*"
+          />
+        </Form.Group>
+      </Form>
     </div>
   )
 }
