@@ -6,8 +6,8 @@ import "./imageUpload.scss"
 import backend from "api/backend"
 import Icon from "components/atoms/Icon/Icon";
 import Heading from "components/atoms//Heading/Heading";
+import { capitalize } from "helpers/textFunctions";
 // import local from "api/local";
-
 
 const ImageUpload = () => {
   const auth = useSelector((state) => state.firebase.auth)
@@ -68,8 +68,6 @@ const ImageUpload = () => {
     setImageAsFile(image);
     handleFireBaseUpload(image)
   }
-
-
 
   const handleFireBaseUpload = async (imageAsFile) => {
 
@@ -135,11 +133,6 @@ const ImageUpload = () => {
         setLoading(false)
       }
     })
-  }
-
-  const capitalize = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1)
-
   }
 
   const results = () => {
