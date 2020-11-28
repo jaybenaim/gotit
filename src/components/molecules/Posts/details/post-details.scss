@@ -1,0 +1,28 @@
+.post-details {
+  width: 100%;
+  height: 100%;
+  margin-top: 50%;
+
+  &__image {
+    margin: 5% auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    img {
+      min-width: 250px;
+      min-height: 250px;
+    }
+  }
+
+  &__title {
+    margin: 0 5%;
+    margin-top: 8%;
+  }
+
+  p {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 3% 11% 2% 10%;
+  }
+}

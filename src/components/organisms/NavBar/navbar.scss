@@ -1,4 +1,4 @@
-.navbar-default { 
+.navbar-default {
   background: #ffffff;
   height: 40px;
   position: absolute;
@@ -11,7 +11,7 @@
     left: -100px;
     top: -100px;
   }
-  
+
   .skip-link a:focus {
     position: fixed;
     z-index: 1000;
@@ -23,9 +23,13 @@
   }
 }
 
-@media (max-width: 989px) { 
-  .navbar-default { 
-    top: -200px; 
+@media (max-width: 989px) {
+  .navbar-default {
+    top: -200px;
     transition: bottom 0.2s ease-in-out;
   }
-} 
+}
+
+.navbar-default--show {
+  top: 0;
+}

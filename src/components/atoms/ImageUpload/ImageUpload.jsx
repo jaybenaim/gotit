@@ -113,9 +113,10 @@ const ImageUpload = () => {
   }
 
   const handleSavePost = async (e) => {
-    // e.preventDefault()
+    e.preventDefault()
 
     const post = {
+      src: uploadedImage.imgUrl,
       title,
       description,
       price,
@@ -212,14 +213,7 @@ const ImageUpload = () => {
           Sell Item
         </Button>
       </form>
-      <Button
-        type="submit"
-        variant="secondary"
-        onClick={() => handleSavePost()}
-      // disabled={!title || !price || !uploadedImage.imgUrl}
-      >
-        Sell Item
-        </Button>
+
       <h2>Suggestions</h2>
       <ul className="image-upload__results">
         {results()}

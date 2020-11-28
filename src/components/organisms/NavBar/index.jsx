@@ -1,8 +1,9 @@
-﻿import React from "react";
+﻿import React, { useState } from "react";
 import "./navbar.scss";
 import { useFirebase } from "react-redux-firebase";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const NavBar = () => {
   const firebase = useFirebase();
@@ -24,8 +25,17 @@ const NavBar = () => {
       });
   };
 
+  const [visible, setVisibility] = useState(false);
+
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+      setVisibility(true)
+    }
+
+  }, [window.location.pathname])
+
   return (
-    <div className="navbar-default">
+    <div className={visible ? "navbar-default navbar-default--show" : "navbar-default"}>
       <div className="skip-link" hidden>
         <a href="#home">Skip to Main Content</a>
       </div>
