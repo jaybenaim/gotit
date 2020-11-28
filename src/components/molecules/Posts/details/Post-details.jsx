@@ -1,11 +1,13 @@
 import Heading from "components/atoms/Heading/Heading";
 import React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
 import "./post-details.scss"
 
-const PostDetails = ({ location }) => {
-  const postId = post ? post.id : location.pathname.replace("/posts/", "")
+const PostDetails = ({ location, location: { state: currentPost } }) => {
+
+  const postId = currentPost.id ? currentPost.id : location.pathname.replace("/posts/", "")
 
   useFirestoreConnect([
     {

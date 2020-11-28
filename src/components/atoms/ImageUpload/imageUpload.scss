@@ -36,12 +36,6 @@ $primary: #007bff;
     flex-direction: column;
 
     .upload-label {
-      margin: 0 auto;
-      padding: 0;
-      position: fixed;
-      bottom: 2.5%;
-      left: 35%;
-
       &:hover {
         cursor: pointer;
       }
@@ -107,6 +101,7 @@ $primary: #007bff;
 
 @media (max-width: 989px) {
   .image-upload > * {
-    zoom: 1.2;
+    .upload-label {
+    }
   }
 }

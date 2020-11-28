@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useFirestore, useFirestoreConnect } from "react-redux-firebase";
+import { Link } from "react-router-dom";
 import "./posts.scss"
 
 const Posts = () => {
@@ -16,12 +17,14 @@ const Posts = () => {
         console.log(posts[postId])
         elms.push((
           <li key={postId}>
-            <p>
-              {post.title}
-            </p>
-            <p>
-              {post.description}
-            </p>
+            <Link to={{ state: post, pathname: `/posts/${postId}` }}>
+              <p>
+                {post.title}
+              </p>
+              <p>
+                {post.description}
+              </p>
+            </Link>
           </li>
         ))
 

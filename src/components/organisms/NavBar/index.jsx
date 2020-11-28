@@ -28,7 +28,7 @@ const NavBar = () => {
   const [visible, setVisibility] = useState(false);
 
   useEffect(() => {
-    if (window.location.pathname === "/") {
+    if (window.location.pathname !== "/") {
       setVisibility(true)
     }
 
