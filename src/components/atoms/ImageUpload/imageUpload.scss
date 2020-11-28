@@ -1,4 +1,4 @@
-$primary: #007bff; 
+$primary: #007bff;
 
 .image-upload {
   display: flex;
@@ -6,107 +6,106 @@ $primary: #007bff;
   margin: 0 auto;
   flex-direction: column;
 
-  &__title { 
-    margin: 2% auto 5% auto; 
-    text-align: center; 
-    width: 100%; 
+  &__title {
+    margin: 2% auto 5% auto;
+    text-align: center;
+    width: 100%;
   }
 
-  &__sub-title { 
+  &__sub-title {
     margin: 0% 0% 5% 2%;
     text-align: center;
   }
 
-  .image-preview { 
+  .image-preview {
     margin: 2% auto;
     max-height: 151px;
     max-width: 135px;
 
-    img { 
+    img {
       max-height: 151px;
       max-width: 135px;
-      border-radius: 4px; 
+      border-radius: 4px;
     }
   }
 
-  &__form { 
+  &__form {
     display: flex;
     justify-content: center;
     margin: 0 auto;
     flex-direction: column;
 
-    .upload-label { 
-      margin: 0 auto; 
-      padding: 0; 
+    .upload-label {
+      margin: 0 auto;
+      padding: 0;
       position: fixed;
       bottom: 2.5%;
       left: 34%;
 
-      &:hover { 
+      &:hover {
         cursor: pointer;
       }
 
-      .fa { 
-        font-size: 6em; 
-        color: $primary; 
+      .fa {
+        font-size: 6em;
+        color: $primary;
       }
     }
 
-    input, textarea { 
-      margin-bottom: 4%; 
+    input,
+    textarea {
+      margin-bottom: 4%;
     }
 
-      .upload-input { 
-        display: none; 
-      }
+    .upload-input {
+      display: none;
+    }
 
-      .price-label { 
-        width: 50%; 
-        align-self: flex-start;
-      }
+    .price-label {
+      width: 50%;
+      align-self: flex-start;
+    }
 
-      .price { 
-        width: 47%; 
-        align-self: flex-end; 
-      }
-
-
+    .price {
+      width: 47%;
+      align-self: flex-end;
+    }
   }
 
-  h2 { 
-    text-align: center; 
-    font-size: 1.3em; 
+  h2 {
+    text-align: center;
+    font-size: 1.3em;
   }
 
-  &__results { 
+  &__results {
     display: flex;
     justify-content: center;
     flex-direction: row;
-    flex-wrap: wrap; 
-    margin-top: 5%; 
-    padding: 0 4%; 
+    flex-wrap: wrap;
+    margin-top: 5%;
+    padding: 0 4%;
     list-style: none;
-    margin: 0 auto; 
+    margin: 0 auto;
 
-    li { 
+    li {
       flex-basis: 30%;
-      color: $primary; 
+      color: $primary;
     }
   }
 
-  &__loader { 
+  &__loader {
     margin: 0 auto;
     margin-bottom: 2%;
     position: absolute;
     justify-content: center;
     left: 30%;
     font-size: 15em;
-    color: $primary; 
+    color: $primary;
   }
 }
 
-@media (max-width: 989px) { 
-  .image-upload { 
-    zoom: 1.2; 
+@media (max-width: 989px) {
+  .image-upload {
+    zoom: 1.2;
   }
 }
