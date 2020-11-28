@@ -1,6 +1,3 @@
-// use for base64 encoded images 
-
-import { storage } from "firebase";
 
 // eslint-disable-next-line 
 const handleCameraUpload = async (uri) => {

@@ -2,15 +2,19 @@
 import Header from "components/organisms/Header/Header";
 import React from "react";
 import { useEffect } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import "./home.scss"
 import { wakeDb } from "redux/actions/dbActions"
 
 const Home = (props) => {
 
+  const dbIsActive = useSelector(state => state.db.status)
+
   useEffect(() => {
-    props.wakeDb()
-  }, [props])
+    if (dbIsActive !== 'active') {
+      props.wakeDb()
+    }
+  }, [dbIsActive])
 
   return (
     <main id="home" className="home">

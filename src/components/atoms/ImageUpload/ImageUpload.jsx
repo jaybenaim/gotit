@@ -9,8 +9,6 @@ import Heading from "components/atoms//Heading/Heading";
 import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
 import { Redirect, withRouter } from "react-router-dom";
-// import local from "api/local";
-import Axios from "axios";
 import AutoComplete from "../AutoComplete/AutoComplete";
 
 const ImageUpload = () => {
