@@ -131,9 +131,16 @@ const ImageUpload = () => {
     }
 
     const postResponse = await firestore.collection('posts').add(post)
+
+    await firestore.collection('posts').doc(postResponse.id).update({
+      id: postResponse.id
+    })
+
     post.id = postResponse.id
 
-    setPost(post)
+    if (post.id) {
+      setPost(post)
+    }
   }
 
   if (post) {

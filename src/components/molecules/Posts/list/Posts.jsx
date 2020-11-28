@@ -1,7 +1,8 @@
+import Heading from "components/atoms/Heading/Heading";
+import CardPost from "components/organisms/card/Card-post/Card-post";
 import React from "react";
 import { useSelector } from "react-redux";
-import { useFirestore, useFirestoreConnect } from "react-redux-firebase";
-import { Link } from "react-router-dom";
+import { useFirestoreConnect } from "react-redux-firebase";
 import "./posts.scss"
 
 const Posts = () => {
@@ -14,17 +15,10 @@ const Posts = () => {
     if (posts) {
       for (const postId in posts) {
         const post = posts[postId]
-        console.log(posts[postId])
+
         elms.push((
           <li key={postId}>
-            <Link to={{ state: post, pathname: `/posts/${postId}` }}>
-              <p>
-                {post.title}
-              </p>
-              <p>
-                {post.description}
-              </p>
-            </Link>
+            <CardPost post={post} />
           </li>
         ))
 
@@ -37,9 +31,14 @@ const Posts = () => {
 
   return (
     <div className="posts">
+      <Heading
+        classname="posts__title"
+        headingText="For sale"
+      />
+      <ul>
+        {postElms()}
 
-      {postElms()}
-
+      </ul>
     </div>
   )
 }

@@ -26,10 +26,13 @@ const NavBar = () => {
   };
 
   const [visible, setVisibility] = useState(false);
+  const [pathName, setPathName] = useState(false);
 
   useEffect(() => {
-    if (window.location.pathname !== "/") {
+    const pathName = window.location.pathname
+    if (pathName !== "/") {
       setVisibility(true)
+      setPathName(pathName)
     }
 
   }, [window.location.pathname])
@@ -40,12 +43,24 @@ const NavBar = () => {
         <a href="#home">Skip to Main Content</a>
       </div>
       <nav className="navbar navbar-expand-sm navbar-light border-bottom justify-content-between">
-        <Link className="navbar-brand" to="/">
+        <Link
+          to="/"
+          className="navbar-brand"
+        >
           react_starter_template
         </Link>
         <div className="navbar-nav">
-          <Link to="/" className="nav-item nav-link active">
+          <Link
+            to="/"
+            className={`nav-item nav-link ${pathName === "/" ? "active" : ''}`}
+          >
             Home
+          </Link>
+          <Link
+            to="/posts"
+            className={`nav-item nav-link ${pathName === "/posts" ? "active" : ''}`}
+          >
+            Posts
           </Link>
           {isLoggedIn ? (
             <>
@@ -53,13 +68,14 @@ const NavBar = () => {
                 Account
               </Link>
 
-              <button
+              <Link
                 variant={"outline-secondary"}
                 className="nav-item nav-link "
                 onClick={() => signOut()}
+                to="#"
               >
                 Logout
-              </button>
+              </Link>
             </>
           ) : (
               <Link to="/sign-in">Sign In</Link>
