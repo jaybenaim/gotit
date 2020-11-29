@@ -15,7 +15,7 @@ const Home = (props) => {
       props.wakeDb()
     }
     // eslint-disable-next-line 
-  })
+  }, [])
 
   return (
     <main id="home" className="home">

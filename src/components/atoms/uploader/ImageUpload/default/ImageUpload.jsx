@@ -123,7 +123,7 @@ const ImageUpload = (props) => {
 
   const handleSavePost = async (e) => {
     e.preventDefault()
-
+    console.log("save post ")
     const currentPost = {
       src: uploadedImage.imgUrl,
       title,
@@ -270,6 +270,7 @@ const ImageUpload = (props) => {
           handleClick={(title) => setTitle(title)}
           parentClass="image-upload__form"
           isForm={false}
+          disabled
         />
 
         <Form.Group controlId="description" >
