@@ -59,7 +59,8 @@ app.use('/api/images', images);
 app.use("/api/predictions", predictions);
 app.use("/api/descriptions", descriptions);
 
-
+const messaging = require('./config/firebaseInit')
+console.log(messaging)
 
 // app.get("*", (req, res) => {
 //   res.sendFile("dist/index.html", { root: __dirname });
