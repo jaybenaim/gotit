@@ -2,5 +2,10 @@
   "compilerOptions": {
     "baseUrl": "src"
   },
-  "include": ["src"]
+  "include": [
+    ,
+    "firebase-messaging-sw.js"
+    "src",
+    "config"
+  ]
 }

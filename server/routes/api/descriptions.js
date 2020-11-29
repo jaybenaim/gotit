@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
   // 2500 request a data $0.004 per after that 
   await Axios.get(`https://wordsapiv1.p.rapidapi.com/words/${query}`, {
     headers: {
-      "X-Mashape-Key": "ef2cc4f6aemsh6662449ac10e580p18ae80jsn64ef0eca4c80",
+      "X-Mashape-Key": process.env.RAPID_API_KEY,
     }
   }).then(({ data }) => {
     const words = {

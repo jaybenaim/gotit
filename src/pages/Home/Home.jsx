@@ -1,4 +1,4 @@
-﻿import ImageUpload from "components/atoms/ImageUpload/ImageUpload";
+﻿import ImageUpload from "components/atoms/uploader/ImageUpload/default/ImageUpload";
 import Header from "components/organisms/Header/Header";
 import React from "react";
 import { useEffect } from "react";

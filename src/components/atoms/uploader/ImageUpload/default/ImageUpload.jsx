@@ -5,11 +5,11 @@ import { connect, useSelector } from "react-redux";
 import "./imageUpload.scss"
 import backend from "api/backend"
 import Icon from "components/atoms/Icon/Icon";
-import Heading from "components/atoms//Heading/Heading";
+import Heading from "components/atoms/Heading/Heading";
 import { capitalize } from "helpers/textFunctions";
 import { useFirestore } from "react-redux-firebase";
 import { Redirect, withRouter } from "react-router-dom";
-import AutoComplete from "../AutoComplete/AutoComplete";
+import AutoComplete from "components/atoms/AutoComplete/AutoComplete";
 import { wakeDb } from "redux/actions/dbActions"
 // import local from "api/local";
 import DropdownMenu from "components/atoms/Dropdown/Dropdown";
