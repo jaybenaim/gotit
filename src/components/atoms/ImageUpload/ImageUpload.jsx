@@ -270,7 +270,6 @@ const ImageUpload = (props) => {
           handleClick={(title) => setTitle(title)}
           parentClass="image-upload__form"
           isForm={false}
-          disabled
         />
 
         <Form.Group controlId="description" >
