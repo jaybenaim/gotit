@@ -3,9 +3,6 @@
     "baseUrl": "src"
   },
   "include": [
-    ,
-    "firebase-messaging-sw.js"
-    "src",
-    "config"
+    "src"
   ]
 }
