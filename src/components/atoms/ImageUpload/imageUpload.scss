@@ -98,6 +98,15 @@ $primary: #007bff;
     font-size: 15em;
     color: $primary;
   }
+
+  .dropdown > * {
+    width: 100%;
+  }
+
+  .dropdown-menu.show {
+    max-height: 150px;
+    overflow-y: scroll;
+  }
 }
 
 @media (max-width: 989px) {

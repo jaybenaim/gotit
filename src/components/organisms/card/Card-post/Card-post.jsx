@@ -5,7 +5,7 @@ import "./card-post.scss"
 const CardPost = ({ post, htmlIs: Link = "a" }) => {
   return (
     <div className="card-post">
-      <Link href={`/posts/${post.id}`}>
+      <Link href={`posts/${post.id}`}>
         <Card>
           <Card.Img src={post.src} />
           <Card.Body>

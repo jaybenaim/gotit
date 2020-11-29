@@ -1,6 +1,6 @@
 import { storage } from "config/firebase";
 import React, { useEffect, useState } from "react";
-import { Button, Form, ListGroup, Spinner } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { connect, useSelector } from "react-redux";
 import "./imageUpload.scss"
 import backend from "api/backend"
@@ -12,6 +12,7 @@ import { Redirect, withRouter } from "react-router-dom";
 import AutoComplete from "../AutoComplete/AutoComplete";
 import { wakeDb } from "redux/actions/dbActions"
 // import local from "api/local";
+import DropdownMenu from "components/atoms/Dropdown/Dropdown";
 
 const ImageUpload = (props) => {
   const firestore = useFirestore()
@@ -122,7 +123,7 @@ const ImageUpload = (props) => {
 
   const handleSavePost = async (e) => {
     e.preventDefault()
-    console.log("save post ")
+
     const currentPost = {
       src: uploadedImage.imgUrl,
       title,
@@ -146,70 +147,63 @@ const ImageUpload = (props) => {
       })
 
       currentPost.id = postResponse.id
-      console.log(currentPost)
       setPost(currentPost)
     }
-
   }
 
   const handleTitleChange = (value) => {
     setTitle(value)
   }
 
-  const [categories, setCategories] = useState()
-  const [suggestedKeywords, setSuggestedKeywords] = useState()
-  const [suggestedDescriptions, setSuggestedDescriptions] = useState()
-  const [synoyms, setSynonyms] = useState()
+  const [categories, setCategories] = useState([])
+  const [suggestedKeywords, setSuggestedKeywords] = useState([])
+  const [suggestedDescriptions, setSuggestedDescriptions] = useState([])
+  const [synonyms, setSynonyms] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const handleDescriptionSuggestionClick = (suggestion) => {
-
-    setDescription(`${description}, ${suggestion}`)
+    setDescription(`${description} ${suggestion}`)
   }
 
   const descriptionEls = () => {
-    const categoriesEls = categories && categories.map((category, i) => (
-      <ListGroup.Item
-        key={i}
-        onClick={() => handleDescriptionSuggestionClick(category)}
-      >
-        {category}
-      </ListGroup.Item>
-    ))
-
-    const keywordEls = suggestedKeywords && suggestedKeywords.map((keyword, i) => (
-      <ListGroup.Item
-        key={i}
-        onClick={() => handleDescriptionSuggestionClick(keyword)}
-      >
-        {keyword}
-      </ListGroup.Item>
-    ))
-
-    const descriptionEls = suggestedDescriptions && suggestedDescriptions.map((descriptionSuggestion, i) => (
-      <ListGroup.Item
-        key={i}
-        onClick={() => handleDescriptionSuggestionClick(descriptionSuggestion)}
-      >
-        {descriptionSuggestion}
-      </ListGroup.Item>
-    ))
-
-    const synoymEls = synoyms && synoyms.map((synoym, i) => (
-      <ListGroup.Item
-        key={i}
-        onClick={() => handleDescriptionSuggestionClick(synoym)}
-      >
-        {synoym}
-      </ListGroup.Item>
-    ))
-
     return (
-      <ListGroup>
-        {categoriesEls}
-        {keywordEls}
-        {descriptionEls}
-        {synoymEls}
-      </ListGroup>
+      <div className="suggested-descriptions">
+        {categories.length > 0 && (
+          <DropdownMenu
+            toggleTitle={"Categories"}
+            data={categories}
+            onSelect={handleDescriptionSuggestionClick}
+            className="categories"
+          />
+        )}
+
+        {suggestedKeywords.length > 0 && (
+          <DropdownMenu
+            toggleTitle={"Keywords"}
+            data={suggestedKeywords}
+            onSelect={handleDescriptionSuggestionClick}
+            className="keywords"
+          />
+        )}
+
+        {suggestedDescriptions.length > 0 && (
+          <DropdownMenu
+            toggleTitle={"Suggested Definitions"}
+            data={suggestedDescriptions}
+            onSelect={handleDescriptionSuggestionClick}
+            className="definitions"
+          />
+        )}
+
+        {synonyms.length > 0 && (
+          <DropdownMenu
+            toggleTitle={"Synonyms"}
+            data={synonyms}
+            onSelect={handleDescriptionSuggestionClick}
+            className="synonyms"
+          />
+        )}
+      </div>
     )
   }
 
@@ -223,6 +217,7 @@ const ImageUpload = (props) => {
     setSuggestedKeywords(keywords)
     setSuggestedDescriptions(suggestedDescriptions)
     setSynonyms(synonyms)
+    setShowSuggestions(true)
   }
 
   if (post && post.id) {
@@ -239,7 +234,6 @@ const ImageUpload = (props) => {
         headingText="Create Post"
         classname="image-upload__title"
       />
-
       <div
         className="image-upload__sub-title"
       >
@@ -266,7 +260,6 @@ const ImageUpload = (props) => {
       )}
 
       <Form onSubmit={handleSavePost} className="image-upload__form">
-
         <AutoComplete
           value={title}
           name="title"
@@ -294,7 +287,7 @@ const ImageUpload = (props) => {
           />
         </Form.Group>
 
-        {descriptionEls()}
+        {showSuggestions && descriptionEls()}
 
         <Button onClick={(e) => getDescriptionSuggestions(e)}>Get Description Suggestions</Button>
 

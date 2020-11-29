@@ -21,10 +21,20 @@ router.get("/", async (req, res) => {
       suggestedDescriptions: []
     }
 
-
     for (const result of data.results) {
-      result.hasParts !== undefined && words.keywords.push(result.hasParts)
-      result.inCategory !== undefined && words.categories.push(result.inCategory)
+      if (result.hasParts !== undefined) {
+        for (const keyword of result.hasParts) {
+          words.keywords.push(keyword)
+        }
+      }
+
+      if (result.inCategory !== undefined) {
+        for (const category of result.inCategory) {
+          if (category !== undefined) {
+            words.categories.push(category)
+          }
+        }
+      }
 
       if (result.synonyms !== undefined) {
         for (const synonym of result.synonyms) {
