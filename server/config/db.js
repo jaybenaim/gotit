@@ -14,4 +14,6 @@ var dbOptions = {
 mongoose
   .connect(db, dbOptions)
   .then(() => console.log("MongoDB successfully connected"))
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    throw new Error(`Error: ${err}`)
+  });
