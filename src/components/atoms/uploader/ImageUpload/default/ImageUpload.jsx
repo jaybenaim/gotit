@@ -13,6 +13,7 @@ import AutoComplete from "components/atoms/AutoComplete/AutoComplete";
 import { wakeDb } from "redux/actions/dbActions"
 // import local from "api/local";
 import DropdownMenu from "components/atoms/Dropdown/Dropdown";
+import local from "api/local";
 
 const ImageUpload = (props) => {
   const firestore = useFirestore()
@@ -168,7 +169,7 @@ const ImageUpload = (props) => {
   const descriptionEls = () => {
     return (
       <div className="suggested-descriptions">
-        {categories.length > 0 && (
+        {categories && categories.length > 0 && (
           <DropdownMenu
             toggleTitle={"Categories"}
             data={categories}
@@ -177,7 +178,7 @@ const ImageUpload = (props) => {
           />
         )}
 
-        {suggestedKeywords.length > 0 && (
+        {suggestedKeywords && suggestedKeywords.length > 0 && (
           <DropdownMenu
             toggleTitle={"Keywords"}
             data={suggestedKeywords}
@@ -186,7 +187,7 @@ const ImageUpload = (props) => {
           />
         )}
 
-        {suggestedDescriptions.length > 0 && (
+        {suggestedDescriptions && suggestedDescriptions.length > 0 && (
           <DropdownMenu
             toggleTitle={"Suggested Definitions"}
             data={suggestedDescriptions}
@@ -195,7 +196,7 @@ const ImageUpload = (props) => {
           />
         )}
 
-        {synonyms.length > 0 && (
+        {synonyms && synonyms.length > 0 && (
           <DropdownMenu
             toggleTitle={"Synonyms"}
             data={synonyms}
@@ -209,7 +210,7 @@ const ImageUpload = (props) => {
 
   const getDescriptionSuggestions = async (e) => {
     e.preventDefault()
-    const descriptionSuggestions = await backend.get(`descriptions?search=${encodeURI(title)}`)
+    const descriptionSuggestions = await local.get(`descriptions?search=${encodeURI(title)}`)
 
     const { categories, keywords, suggestedDescriptions, synonyms } = descriptionSuggestions.data
 

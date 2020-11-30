@@ -1,6 +1,6 @@
 const admin = require('firebase-admin')
 
-const googleApplicationCredentials = require('./settings')
+const googleApplicationCredentials = require('./messaging/gotit-cbe1b-firebase-adminsdk-9ixyg-510962a1f7.json')
 
 admin.initializeApp({
   credential: admin.credential.cert(googleApplicationCredentials),
