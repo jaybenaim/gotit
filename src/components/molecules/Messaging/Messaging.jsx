@@ -1,10 +1,11 @@
 import local from "api/local";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./messaging.scss"
 
 const Messaging = () => {
+  const dispatch = useDispatch()
   const [messages, setMessages] = useState([]);
   const [requesting, setRequesting] = useState(false);
   const interestedMessage = useSelector((state) => state.messages.interestedMessage)
@@ -27,6 +28,7 @@ const Messaging = () => {
       console.log(messageResponse.data)
       setMessages(messageResponse.data.message.body)
       setRequesting(false)
+
     } else {
       // dispatch error 
       console.log("Error")
@@ -35,7 +37,14 @@ const Messaging = () => {
 
   useEffect(() => {
     setRequesting(true);
-    interestedMessage && fetchMessages()
+    if (interestedMessage) {
+      dispatch({
+        type: "SET_NOTIFICATION",
+        payload: { body: interestedMessage }
+      })
+      fetchMessages()
+    }
+
   }, [interestedMessage])
 
   return (

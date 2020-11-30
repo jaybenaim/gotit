@@ -52,7 +52,7 @@ const App = () => {
   return (
     <React.Fragment>
       <NavBar />
-      <Notification type="toast" body="To be added" />
+      <Notification type="toast" />
       <Switch>
         <PrivateRoute exact path="/admin">
           <AdminHome />
