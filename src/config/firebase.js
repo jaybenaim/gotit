@@ -27,13 +27,29 @@ const storage = firebase.storage();
 const messaging = firebase.messaging();
 
 messaging.getToken({ vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_KEY })
+// const messaging = firebase.messaging();
 
-const onMessageListener = () =>
-  new Promise((resolve) => {
-    messaging.onMessage((payload) => {
-      resolve(payload);
-    });
+// export const requestFirebaseNotificationPermission = () =>
+//   new Promise((resolve, reject) => {
+//     messaging
+//       .requestPermission()
+//       .then(() => messaging.getToken())
+//       .then((firebaseToken) => {
+//         resolve(firebaseToken);
+//       })
+//       .catch((err) => {
+//         reject(err);
+//       });
+//   });
+
+const onMessageListener = () => new Promise((resolve) => {
+  messaging.onMessage((payload) => {
+    console.log("message recieved")
+
+    resolve(payload);
   });
+});
+
 
 export {
   storage,

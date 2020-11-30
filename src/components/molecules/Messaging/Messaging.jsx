@@ -1,4 +1,5 @@
 import local from "api/local";
+import { onMessageListener } from "config/firebase";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,14 +11,13 @@ const Messaging = () => {
   const [requesting, setRequesting] = useState(false);
   const interestedMessage = useSelector((state) => state.messages.interestedMessage)
 
-  const getTokenFromLocalStorage = async () => {
+  const getTokenFromLocalStorage = () => {
     return window.localStorage.getItem('token')
   }
 
   const fetchMessages = async () => {
     const token = getTokenFromLocalStorage()
-    console.log("token", token)
-    console.log(interestedMessage)
+    console.log(token)
     const messageResponse = await local.post("/messages", {
       token,
       title: "Interested",
@@ -25,7 +25,6 @@ const Messaging = () => {
     })
 
     if (messageResponse.data) {
-      console.log(messageResponse.data)
       setMessages(messageResponse.data.message.body)
       setRequesting(false)
 

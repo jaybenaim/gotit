@@ -2,7 +2,6 @@
 import { Switch, Route } from "react-router-dom";
 import "./App.scss";
 import NavBar from "components/organisms/NavBar"
-
 import Home from "pages/Home/Home";
 import PrivateRoute from "components/organisms/Auth/PrivateRoute/PrivateRoute";
 import SignIn from "components/organisms/Auth/SignIn/SignIn";
@@ -11,11 +10,8 @@ import AdminHome from "pages/Admin/AdminHome/AdminHome";
 import Posts from "components/molecules/Posts/list/Posts";
 import PostDetails from "components/molecules/Posts/details/Post-details";
 import { useEffect } from "react";
-import { messaging, requestFirebaseNotificationPermission } from "./config/firebase"
-import errorReducers from "redux/reducers/errorReducers";
+import { messaging } from "./config/firebase"
 
-import { setDbStatus } from "redux/actions/dbActions";
-import { useDispatch } from "react-redux";
 import Notification from "components/atoms/Notification/Notification";
 
 const App = () => {
@@ -46,7 +42,6 @@ const App = () => {
 
   useEffect(() => {
     requestMessagingToken()
-    // requestMessagingToken();
   }, [])
 
   return (
