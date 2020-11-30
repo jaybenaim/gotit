@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useFirebase } from "react-redux-firebase";
 import { useHistory, Link } from "react-router-dom";
-import Notifications from "components/atoms/Notifications/Notifications";
+import Notifications from "components/atoms/Notification/Notification";
 import "assets/stylesheets/signin.scss";
 
 const SignIn = () => {

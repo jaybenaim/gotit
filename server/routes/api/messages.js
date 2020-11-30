@@ -5,19 +5,29 @@ require("dotenv").config();
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const message = req.query.message
-  const tokens = []
-  const notificationData = {
-    title: "New message",
-    body: message
+router.post("/", async (req, res) => {
+
+  try {
+
+    const title = req.body.title
+    const message = req.body.message
+
+    const tokens = [
+      req.body.token
+    ]
+
+    const notificationData = {
+      title: title,
+      body: message
+    }
+
+    console.log(tokens, notificationData)
+    sendNotificationToClient(tokens, notificationData)
+    res.send({ message: notificationData })
+  } catch {
+    res.send({ error: "Notification failed" })
   }
 
-  await sendNotificationToClient(tokens, notificationData).then(response => {
-    res.send(response.data)
-  }).catch(err => {
-    res.send(err)
-  })
 })
 
 module.exports = router;

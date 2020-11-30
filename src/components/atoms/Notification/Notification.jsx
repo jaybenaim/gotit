@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Toast, Alert, Button } from "react-bootstrap";
+import Heading from "components/atoms/Heading/Heading";
+import "./notification.scss"
 
 const Notifications = ({
-  heading,
+  heading = "heading",
   body,
   type,
   small,
@@ -17,6 +19,7 @@ const Notifications = ({
     show &&
     (type === "alert" ? (
       <Alert
+        className="notification"
         variant={variant}
         onClose={() => setShow(false)}
         style={style}
@@ -31,16 +34,20 @@ const Notifications = ({
         )}
       </Alert>
     ) : (
-      type === "toast" && (
-        <Toast onClose={() => setShow(false)} style={style}>
-          <Toast.Header>
-            <strong className="mr-auto">{heading.toUpperCase()}</strong>
-            <small>{small}</small>
-          </Toast.Header>
-          <Toast.Body>{body}</Toast.Body>
-        </Toast>
-      )
-    ))
+        type === "toast" && (
+          <Toast
+            className="notification"
+            onClose={() => setShow(false)}
+            style={style}
+          >
+            <Toast.Header>
+              <Heading headingStyle="h3" className="mr-auto">{heading.toUpperCase()}</Heading>
+              <small>{small}</small>
+            </Toast.Header>
+            <Toast.Body>{body}</Toast.Body>
+          </Toast>
+        )
+      ))
   );
 };
 

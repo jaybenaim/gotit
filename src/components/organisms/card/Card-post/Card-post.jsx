@@ -1,3 +1,5 @@
+import InterestedButton from "components/atoms/InterestedButton/InterestedButton";
+import Messaging from "components/molecules/Messaging/Messaging";
 import React from "react";
 import { Card } from "react-bootstrap";
 import "./card-post.scss"
@@ -5,8 +7,8 @@ import "./card-post.scss"
 const CardPost = ({ post, htmlIs: Link = "a" }) => {
   return (
     <div className="card-post">
-      <Link href={`posts/${post.id}`}>
-        <Card>
+      <Card>
+        <Link href={`posts/${post.id}`}>
           <Card.Img src={post.src} />
           <Card.Body>
             <Card.Title>{post.title}</Card.Title>
@@ -17,8 +19,12 @@ const CardPost = ({ post, htmlIs: Link = "a" }) => {
               ${post.price} CAD
           </Card.Text>
           </Card.Body>
-        </Card>
-      </Link>
+        </Link>
+
+        <InterestedButton />
+
+        <Messaging />
+      </Card>
     </div>
   )
 }

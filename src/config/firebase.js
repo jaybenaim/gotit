@@ -27,5 +27,20 @@ const storage = firebase.storage();
 const messaging = firebase.messaging();
 
 messaging.getToken({ vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_KEY })
+const messaging = firebase.messaging();
 
-export { storage, auth, firestore, messaging };
+const onMessageListener = () =>
+  new Promise((resolve) => {
+    messaging.onMessage((payload) => {
+      resolve(payload);
+    });
+  });
+
+export {
+  storage,
+  auth,
+  firestore,
+  messaging,
+  requestFirebaseNotificationPermission,
+  onMessageListener
+};

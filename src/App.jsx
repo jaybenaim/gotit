@@ -11,18 +11,19 @@ import AdminHome from "pages/Admin/AdminHome/AdminHome";
 import Posts from "components/molecules/Posts/list/Posts";
 import PostDetails from "components/molecules/Posts/details/Post-details";
 import { useEffect } from "react";
-import { messaging } from "./config/firebase"
+import { messaging, requestFirebaseNotificationPermission } from "./config/firebase"
 import errorReducers from "redux/reducers/errorReducers";
+
+import { setDbStatus } from "redux/actions/dbActions";
+import { useDispatch } from "react-redux";
+import Notification from "components/atoms/Notification/Notification";
 
 const App = () => {
   const setTokenToLocalStorage = (token) => {
     return window.localStorage.setItem('token', token)
   }
-  const getTokenFromLocalStorage = () => {
-    return window.localStorage.getItem('token')
-  }
 
-  const messagingToken = () => {
+  const requestMessagingToken = () => {
     // Get registration token. Initially this makes a network call, once retrieved
     // subsequent calls to getToken will return from cache.
     messaging.getToken({ vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_KEY })
@@ -41,18 +42,17 @@ const App = () => {
         console.log('An error occurred while retrieving token. ', err);
         // dispatchEvent(errorReducers("GET_ERRORS", "GET_ERRORS"))
       });
-
   }
 
   useEffect(() => {
-    messagingToken()
-    const token = getTokenFromLocalStorage()
-    console.log(token)
+    requestMessagingToken()
+    // requestMessagingToken();
   }, [])
 
   return (
     <React.Fragment>
       <NavBar />
+      <Notification type="toast" body="To be added" />
       <Switch>
         <PrivateRoute exact path="/admin">
           <AdminHome />
