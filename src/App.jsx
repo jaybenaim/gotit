@@ -48,7 +48,7 @@ const App = () => {
     messagingToken()
     const token = getTokenFromLocalStorage()
     console.log(token)
-  })
+  }, [])
 
   return (
     <React.Fragment>

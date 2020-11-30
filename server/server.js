@@ -6,6 +6,7 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const images = require("./routes/api/images");
 const predictions = require("./routes/api/predictions");
+const messages = require("./routes/api/messages");
 const descriptions = require("./routes/api/descriptions");
 const cors = require("cors");
 const CONSTANTS = require("./constants");
@@ -58,6 +59,8 @@ app.use("/api", indexRouter);
 app.use('/api/images', images);
 app.use("/api/predictions", predictions);
 app.use("/api/descriptions", descriptions);
+app.use("/api/messages", messages);
+
 
 const messaging = require('./config/firebaseInit')
 console.log(messaging)
