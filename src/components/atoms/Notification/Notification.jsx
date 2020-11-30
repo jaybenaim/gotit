@@ -3,10 +3,10 @@ import { Toast, Alert, Button } from "react-bootstrap";
 import Heading from "components/atoms/Heading/Heading";
 import "./notification.scss"
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Notifications = ({
-  heading = "heading",
+  heading = "Error",
   headingStyle = "h3",
   body,
   type,
@@ -18,7 +18,9 @@ const Notifications = ({
 
 }) => {
   const [show, setShow] = useState(false);
-  const notification = useSelector((state) => state.notifications.notification)
+  const { errors, notifications: { notification } } = useSelector((state) => state)
+  const [errorMessage, setErrorMessage] = useState("")
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (Object.keys(notification).length > 0) {
@@ -26,18 +28,30 @@ const Notifications = ({
     }
   }, [notification])
 
+  useEffect(() => {
+
+    if (Object.keys(errors).length > 0) {
+      setShow(true)
+      setErrorMessage(errors.message)
+    }
+
+  }, [errors])
+
   return (
     show &&
-    (type === "alert" ? (
+    (type === "alert" || Object.keys(errors).length > 0 ? (
       <Alert
         className="notification"
-        variant={variant}
+        variant={errors ? "danger" : variant}
         onClose={() => setShow(false)}
         style={style}
         dismissible
       >
         <Alert.Heading>{heading || notification.heading}</Alert.Heading>
         <p>{body || notification.body}</p>
+        {errors && (
+          <div>{errorMessage}</div>
+        )}
         {confirmButtonText && (
           <Button variant="outline-danger" onClick={handleConfirm}>
             {confirmButtonText}{" "}
@@ -55,7 +69,9 @@ const Notifications = ({
               <Heading headingStyle={headingStyle} className="mr-auto">{heading || notification.heading}</Heading>
               <small>{small || notification.small}</small>
             </Toast.Header>
-            <Toast.Body>{body || notification.body}</Toast.Body>
+            <Toast.Body>
+              {body || notification.body}
+            </Toast.Body>
           </Toast>
         )
       ))

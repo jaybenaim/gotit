@@ -27,10 +27,11 @@ const Messaging = () => {
     if (messageResponse.data) {
       setMessages(messageResponse.data.message.body)
       setRequesting(false)
-
     } else {
-      // dispatch error 
-      console.log("Error")
+      dispatch({
+        type: "GET_ERRORS",
+        payload: messageResponse.error
+      })
     }
   }
 
