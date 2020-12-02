@@ -2,8 +2,6 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/auth";
 import "firebase/firestore";
-import "firebase/messaging";
-
 
 var firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -24,8 +22,5 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const storage = firebase.storage();
-const messaging = firebase.messaging();
 
-messaging.getToken({ vapidKey: process.env.REACT_APP_FIREBASE_MESSAGING_KEY })
-
-export { storage, auth, firestore, messaging };
+export { storage, auth, firestore };

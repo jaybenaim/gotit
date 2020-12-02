@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Toast, Alert, Button } from "react-bootstrap";
 import Heading from "components/atoms/Heading/Heading";
 import "./notifications.scss"
-import { useDispatch } from "react-redux";
 
 const Notifications = ({
   heading,
@@ -17,23 +16,6 @@ const Notifications = ({
   handleCloseFunction
 }) => {
   const [show, setShow] = useState(true);
-  // const { errors, notifications: { notification } } = useSelector((state) => state)
-  // const [errorMessage, setErrorMessage] = useState("")
-  const dispatch = useDispatch()
-
-
-  // useEffect(() => {
-  //   if (Object.keys(notification).length > 0) {
-  //     setShow(true)
-  //   }
-  // }, [notification])
-
-  // useEffect(() => {
-  //   if (Object.keys(errors).length > 0) {
-  //     setShow(true)
-  //     setErrorMessage(errors.message)
-  //   }
-  // }, [errors])
 
   const handleClose = () => {
     if (handleCloseFunction !== undefined) {
