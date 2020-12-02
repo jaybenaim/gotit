@@ -1,4 +1,6 @@
+
 import React from "react";
+import { Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
 import "./messages.scss"
@@ -22,11 +24,13 @@ const Messages = () => {
       Messages:
 
       {messages && messages.map(m => (
-        <div>
-          <h6>{m.senderData.displayName}</h6>
-          <p>{m.message}</p>
-          <hr />
-        </div>
+        <Card>
+          <Card.Header>
+            {m.senderData.displayName}
+          </Card.Header>
+
+          <Card.Body>{m.message}</Card.Body>
+        </Card>
       ))}
     </div>
   )

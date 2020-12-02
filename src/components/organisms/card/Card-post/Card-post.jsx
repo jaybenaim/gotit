@@ -1,4 +1,4 @@
-import InterestedButton from "components/atoms/InterestedButton/InterestedButton";
+import InputMessage from "components/atoms/Input/InputMessage";
 import React from "react";
 import { Card } from "react-bootstrap";
 import "./card-post.scss"
@@ -23,7 +23,10 @@ const CardPost = ({ post, htmlIs: Link = "a" }) => {
           </Card.Body>
         </Link>
 
-        <InterestedButton post={post} />
+        <InputMessage
+          postUserId={post.user.id}
+          messageCategory="interested"
+        />
       </Card>
     </div>
   )

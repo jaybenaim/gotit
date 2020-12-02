@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useFirestore } from "react-redux-firebase";
-import "./interestedButton.scss"
+import "./inputMessage.scss"
 
-const InterestedButton = ({ post }) => {
+const InputMessage = ({
+  postUserId,
+  messageCategory,
+  label = "Message:",
+  placeholder = "Is this still available?"
+}) => {
   const dispatch = useDispatch()
   const firestore = useFirestore()
 
-  const [messages, setMessages] = useState([]);
-  const [requesting, setRequesting] = useState(false);
   const [value, setValue] = useState("")
 
   const {
@@ -27,7 +30,7 @@ const InterestedButton = ({ post }) => {
 
     const message = {
       createdAt: new Date(),
-      title: "Interested",
+      title: messageCategory,
       message: value,
       senderData: {
         id: uid,
@@ -38,14 +41,14 @@ const InterestedButton = ({ post }) => {
     const messageFs =
       await firestore
         .collection('users')
-        .doc(post.user.id)
+        .doc(postUserId)
         .collection('messages')
         .add(message)
 
     if (messageFs.id) {
       await firestore
         .collection('users')
-        .doc(post.user.id)
+        .doc(postUserId)
         .collection('messages')
         .doc(messageFs.id)
         .update({
@@ -76,17 +79,17 @@ const InterestedButton = ({ post }) => {
   }
 
   return (
-    <div className="interestedButton">
+    <div className="input-message">
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="message">
-          <Form.Label>Message: </Form.Label>
+          <Form.Label>{label} </Form.Label>
 
           <Form.Control
             className="input-group-text message"
-            name="title"
+            name="message"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Is this still available?"
+            placeholder={placeholder}
           />
         </Form.Group>
         <Button type="submit">Send message</Button>
@@ -95,6 +98,6 @@ const InterestedButton = ({ post }) => {
     </div>
   )
 }
-export default InterestedButton;
+export default InputMessage;
 
 
