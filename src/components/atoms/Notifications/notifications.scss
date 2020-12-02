@@ -1,0 +1,10 @@
+.notifications {
+  min-width: 100%;
+  position: fixed !important;
+  z-index: 999;
+
+  .toast-body {
+    min-width: 100%;
+    min-height: 150px;
+  }
+}

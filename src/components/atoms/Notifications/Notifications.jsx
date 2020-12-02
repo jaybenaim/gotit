@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Toast, Alert, Button } from "react-bootstrap";
 import Heading from "components/atoms/Heading/Heading";
 import "./notifications.scss"
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Notifications = ({
-  heading = "Error",
+  heading,
   headingStyle = "h3",
   body,
   type,
@@ -15,8 +14,9 @@ const Notifications = ({
   confirmButtonText,
   handleConfirm,
   style,
+  handleCloseFunction
 }) => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   // const { errors, notifications: { notification } } = useSelector((state) => state)
   // const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
@@ -35,13 +35,21 @@ const Notifications = ({
   //   }
   // }, [errors])
 
+  const handleClose = () => {
+    if (handleCloseFunction !== undefined) {
+      handleCloseFunction()
+    } else {
+      setShow(!show)
+    }
+  }
+
   return (
     show &&
     (type === "alert" ? (
       <Alert
-        className="notification"
+        className="notifications"
         variant={variant}
-        onClose={() => setShow(false)}
+        onClose={() => handleClose()}
         style={style}
         dismissible
       >
@@ -61,8 +69,8 @@ const Notifications = ({
     ) : (
         type === "toast" && (
           <Toast
-            className="notification"
-            onClose={() => setShow(false)}
+            className="notifications"
+            onClose={() => handleClose()}
             style={style}
           >
             <Toast.Header>

@@ -10,6 +10,7 @@ const Posts = () => {
   const posts = useSelector((state) => state.firestore.data.posts)
 
   const postElms = () => {
+
     const elms = []
 
     if (posts) {
@@ -21,10 +22,8 @@ const Posts = () => {
             <CardPost post={post} />
           </li>
         ))
-
       }
     }
-
 
     return elms
   }
@@ -35,11 +34,11 @@ const Posts = () => {
         classname="posts__title"
         headingText="For sale"
       />
+
       <ul>
         {postElms()}
-
       </ul>
-    </div>
+    </div >
   )
 }
 export default Posts;

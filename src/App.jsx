@@ -13,7 +13,7 @@ import PostDetails from "components/molecules/Posts/details/Post-details";
 import { useEffect } from "react";
 
 import Notifications from "components/atoms/Notifications/Notifications";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const App = () => {
   // const setTokenToLocalStorage = (token) => {
@@ -54,31 +54,51 @@ const App = () => {
   // })
   const { errors } = useSelector((state) => state)
   const [showErrors, setShowErrors] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("")
+  const [error, setErrorMessage] = useState({})
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       setShowErrors(true)
-      setErrorMessage(errors.message)
+      setErrorMessage(errors.error)
     }
   }, [errors])
+
+  const handleCloseFunction = () => {
+    setShowErrors(false)
+    dispatch({
+      type: "SET_ERRORS",
+      payload: {}
+    })
+  }
 
   return (
     <React.Fragment>
       <NavBar />
-      {showErrors && (
-        <Notifications
-          variant="danger"
 
-        />
+      {showErrors && (
+        error && (
+          <Notifications
+            variant={error.type ? error.type : "danger"}
+            type="alert"
+            heading={error.heading ? error.heading : 'Error'}
+            body={error.message ? error.message : "Something went wrong"}
+            handleCloseFunction={handleCloseFunction
+            }
+          />
+        )
       )}
+
       <Switch>
         <PrivateRoute exact path="/admin">
           <AdminHome />
         </PrivateRoute>
+
         <PrivateRoute exact path="/">
           <Home />
         </PrivateRoute>
+
         <Route exact path="/" component={Home} />
         <Route exact path="/sign-in" component={SignIn} />
         <Route exact path="/sign-up" component={SignUp} />
