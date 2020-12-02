@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useFirebase } from "react-redux-firebase";
 import { useHistory, Link } from "react-router-dom";
-import Notifications from "components/atoms/Notifications/Notifications";
 import "assets/stylesheets/signin.scss";
+import { useDispatch } from "react-redux";
 
 const SignIn = () => {
   const firebase = useFirebase();
@@ -10,6 +10,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
+  const dispatch = useDispatch()
 
   const signInWithProvider = (provider) => {
     let userEmail = email.length >= 1 ? email : "";
@@ -26,6 +27,14 @@ const SignIn = () => {
         .catch((err) => {
           if (err.code.includes("account-exists")) {
             setErrors([...errors, "Account Exists"]);
+            dispatch({
+              type: "SET_ERRORS",
+              payload: {
+                error: {
+                  message: [...errors, 'Account Exists']
+                }
+              }
+            })
           }
         });
     } else {
@@ -42,6 +51,14 @@ const SignIn = () => {
         .catch((err) => {
           if (err.code.includes("account-exists")) {
             setErrors([...errors, "Account Exists"]);
+            dispatch({
+              type: "SET_ERRORS",
+              payload: {
+                error: {
+                  message: [...errors, 'Account Exists']
+                }
+              }
+            })
           }
         });
     }
@@ -51,14 +68,6 @@ const SignIn = () => {
 
   return (
     <div className="login__page">
-      {errors.length >= 1 && (
-        <Notifications
-          type={"alert"}
-          variant={"danger"}
-          heading={"Error"}
-          body={errorElements()}
-        />
-      )}
       <div className="container">
         <div className="row">
           <div className="card col-md-4 col-md-offset-4">
@@ -161,7 +170,6 @@ const SignIn = () => {
           </div>
         </div>
       </div>
-      <h1>Sign In</h1>
     </div>
   );
 };

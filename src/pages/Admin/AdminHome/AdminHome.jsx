@@ -1,6 +1,7 @@
 import React from "react";
 import "App.scss"
 import { useSelector } from "react-redux";
+import Messages from "components/molecules/Messages/Messages";
 
 const AdminHome = () => {
 
@@ -9,6 +10,7 @@ const AdminHome = () => {
   return (
     <div className="admin">
       <li> {profile.displayName}</li>
+      <Messages />
     </div>
   )
 };
