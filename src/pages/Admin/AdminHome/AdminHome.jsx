@@ -9,7 +9,7 @@ const AdminHome = () => {
 
   return (
     <div className="admin">
-      <li> {profile.displayName}</li>
+      <li> {profile.displayName || profile.email}</li>
       <Messages />
     </div>
   )
