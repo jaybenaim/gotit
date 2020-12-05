@@ -23,13 +23,19 @@ const Messages = () => {
     <div className="messages">
       Messages:
 
-      {messages && messages.map(m => (
-        <Card>
-          <Card.Header>
+      {messages && messages.map((m, i) => (
+        <Card
+          body
+          key={i}
+          onClick=""
+        >
+          <Card.Title>
             {m.senderData.displayName}
-          </Card.Header>
+          </Card.Title>
 
-          <Card.Body>{m.message}</Card.Body>
+          <Card.Text>
+            {m.message}
+          </Card.Text>
         </Card>
       ))}
     </div>

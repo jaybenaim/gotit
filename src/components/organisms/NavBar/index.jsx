@@ -63,6 +63,12 @@ const NavBar = () => {
           >
             Posts
           </Link>
+          <Link
+            to="/messages"
+            className={`nav-item nav-link ${pathName === "/messages" ? "active" : ''}`}
+          >
+            Messages
+          </Link>
           {isLoggedIn ? (
             <>
               <Link to="/admin" className="nav-item nav-link ">

@@ -35,7 +35,8 @@ const InputMessage = ({
       senderData: {
         id: uid,
         ...profile
-      }
+      },
+      opened: false
     }
 
     const messageFs =

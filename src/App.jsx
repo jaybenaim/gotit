@@ -14,6 +14,7 @@ import { useEffect } from "react";
 
 import Notifications from "components/atoms/Notifications/Notifications";
 import { useDispatch, useSelector } from "react-redux";
+import Messages from "components/molecules/Messages/Messages";
 
 const App = () => {
   const { errors } = useSelector((state) => state)
@@ -66,6 +67,7 @@ const App = () => {
         <Route exact path="/" component={Home} />
         <Route exact path="/sign-in" component={SignIn} />
         <Route exact path="/sign-up" component={SignUp} />
+        <Route exact path="/messages" component={Messages} />
         <Route exact path="/posts" component={Posts} />
         <Route exact path="/posts/:id" render={(props) => <PostDetails {...props} />} />
       </Switch>
