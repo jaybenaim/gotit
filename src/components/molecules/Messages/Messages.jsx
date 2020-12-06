@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useFirestore, useFirestoreConnect } from "react-redux-firebase";
 import moment from "moment"
 import "./messages.scss"
+import ChatWidget from "components/atoms/ChatWidget/ChatWidget";
 
 const Messages = () => {
   const firestore = useFirestore()
@@ -67,7 +68,6 @@ const Messages = () => {
 
     setMessageList(userList)
     setUsers(users)
-
   }
 
   const [convoOpen, setConvoOpen] = useState(false)
@@ -128,13 +128,17 @@ const Messages = () => {
         </Card>
       ))}
 
-      {convoOpen && (
+      {convoOpen && currentChatUser && (
         <Modal.Dialog>
           <Modal.Header>
             <Modal.Title>Modal title</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
+            <ChatWidget
+              postUserId={currentChatUser.id}
+              messages={messageList[currentChatUser.displayName || currentChatUser.email]}
+            />
             {currentChatMessages.map((m, i) => (
               <Card.Text
                 key={i}

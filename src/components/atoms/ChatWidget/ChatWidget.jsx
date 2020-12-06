@@ -1,19 +1,26 @@
-import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import React from "react";
+import { useEffect } from "react";
+import { addResponseMessage, setQuickButtons, Widget } from "react-chat-widget"
 import { useDispatch, useSelector } from "react-redux";
 import { useFirestore } from "react-redux-firebase";
-import "./inputMessage.scss"
+import "./chatWidget.scss"
 
-const InputMessage = ({
+const ChatWidget = ({
+  title = "in-contact",
   postUserId,
-  messageCategory,
-  label = "Message:",
-  placeholder = "Is this still available?"
+  messages,
+  buttons = [{
+    label: 'Where are you located?',
+    value: 'Where are you located?'
+  },
+  {
+    label: 'Can you deliver?',
+    value: 'Can you deliver?'
+  }]
 }) => {
+
   const dispatch = useDispatch()
   const firestore = useFirestore()
-
-  const [value, setValue] = useState("")
 
   const {
     firebase: {
@@ -24,15 +31,13 @@ const InputMessage = ({
     }
   } = useSelector((state) => state)
 
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const handleNewMessageSend = async (messageValue) => {
     const date = new Date()
 
     const message = {
       createdAt: date.getTime(),
-      title: messageCategory,
-      message: value,
+      title: title,
+      message: messageValue,
       senderData: {
         id: uid,
         ...profile
@@ -80,26 +85,32 @@ const InputMessage = ({
     })
   }
 
+  const handleQuickButtonClicked = data => {
+    handleNewMessageSend(data)
+    setQuickButtons(buttons.filter(button => button.value !== data));
+  };
+
+  useEffect(() => {
+
+    if (messages) {
+      for (const message of messages) {
+        addResponseMessage(message.message)
+      }
+    }
+
+
+    setQuickButtons(buttons);
+  }, [messages])
+
   return (
-    <div className="input-message">
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="message">
-          <Form.Label>{label} </Form.Label>
-
-          <Form.Control
-            className="input-group-text message"
-            name="message"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder={placeholder}
-          />
-        </Form.Group>
-        <Button type="submit">Send message</Button>
-      </Form>
-
+    <div className="chatWidget">
+      <Widget
+        handleNewUserMessage={handleNewMessageSend}
+        handleQuickButtonClicked={handleQuickButtonClicked}
+      />
     </div>
   )
 }
-export default InputMessage;
+export default ChatWidget;
 
 
