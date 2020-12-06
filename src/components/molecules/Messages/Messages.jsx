@@ -22,68 +22,63 @@ const Messages = () => {
   useFirestoreConnect([
     {
       collection: `users/${uid}/sentMessages`,
-      storeAs: "sentMessages"
+      storeAs: "sentMessagesData"
     }
   ])
 
-  const { receivedMessagesData, sentMessages } = useSelector((state) =>
+  const { receivedMessagesData, sentMessagesData } = useSelector((state) =>
     state.firestore.ordered &&
     state.firestore.ordered)
 
   const [users, setUsers] = useState([])
   const [messageList, setMessageList] = useState({})
 
-  const [receivedMessages, setReceivedMessages] = useState()
+  const [receivedMessages, setReceivedMessages] = useState({})
+  const [sentMessages, setSentMessages] = useState({})
 
 
   const getReceivedMessages = () => {
-    const messageListItems = {
-      receivedMessages: {},
-    }
+    const receivedMessages = {}
 
     const users = []
 
     if (receivedMessagesData) {
       for (const message of receivedMessagesData) {
-        const displayName = message.senderData.displayName
-        const email = message.senderData.email
+        const displayName = message.senderData.displayName || message.senderData.email
 
-        if (displayName) {
-          messageListItems.receivedMessages[displayName] = []
+        receivedMessages[displayName] = []
 
-          if (!users.includes(displayName)) {
-            users.push(displayName)
-          }
+        if (receivedMessages[displayName]) {
+          receivedMessages[displayName].push(message)
         }
-        else if (email) {
-          messageListItems.receivedMessages[email] = []
-          if (!users.includes(email)) {
-            users.push(email)
-          }
+        if (!users.includes(displayName)) {
+          users.push(displayName)
         }
       }
-
-      for (const message of receivedMessagesData) {
-        const displayName = message.senderData.displayName
-        const email = message.senderData.email
-        if (displayName) {
-          if (messageListItems.receivedMessages[displayName]) {
-            messageListItems.receivedMessages[displayName].push(message)
-          }
-        }
-        if (email) {
-          if (messageListItems.receivedMessages[email]) {
-            messageListItems.receivedMessages[email].push(message)
-          }
-        }
-      }
-
     }
 
-    setReceivedMessages({
-      receivedMessages: messageListItems.receivedMessages,
-    })
     setUsers(users)
+
+    setReceivedMessages(receivedMessages)
+  }
+
+  const getSentMessages = () => {
+    const sentMessages = {}
+
+
+    if (sentMessagesData) {
+      for (const message of sentMessagesData) {
+        const displayName = message.senderData.displayName || message.senderData.email
+
+        sentMessages[displayName] = []
+
+        if (sentMessages[displayName]) {
+          sentMessages[displayName].push(message)
+        }
+      }
+    }
+
+    setSentMessages(sentMessages)
   }
 
   // const getSentMessages = () => {
@@ -130,7 +125,6 @@ const Messages = () => {
 
   const [convoOpen, setConvoOpen] = useState(false)
   const [currentChatUser, setCurrentChatUser] = useState(undefined)
-  const [currentChatMessages, setCurrentChatMessages] = useState([])
 
 
   const openMessage = async (recentMessage) => {
@@ -144,16 +138,13 @@ const Messages = () => {
       })
 
     setCurrentChatUser(recentMessage.senderData)
-    setCurrentChatMessages(messageList)
     setConvoOpen(true)
   }
 
   useEffect(() => {
-    if (receivedMessagesData) {
 
-      getReceivedMessages()
-    }
-    // getSentMessages()
+    getReceivedMessages()
+    getSentMessages()
     // dispatch new alert if new message 
   }, [])
 
@@ -162,13 +153,13 @@ const Messages = () => {
     // dispatch new alert if new message 
   }, [receivedMessagesData])
 
-  // useEffect(() => {
-  //   if (sentMessages) {
-  //     getSentMessages()
-  //   }
+  useEffect(() => {
+    // if (sentMessages) {
+    getSentMessages()
+    // }
 
-  //   // dispatch new alert if new message 
-  // }, [sentMessages])
+    // dispatch new alert if new message 
+  }, [sentMessagesData])
 
 
   return (
@@ -183,6 +174,7 @@ const Messages = () => {
           <Card.Title>
             {userName}
           </Card.Title>
+          {console.log(receivedMessages[userName], receivedMessages)}
           {receivedMessages[userName] && (
             <Card.Text
               onClick={() => openMessage(receivedMessages[userName][0])}
@@ -209,7 +201,7 @@ const Messages = () => {
               postUserId={currentChatUser.id}
               currentChatUser={currentChatUser}
               receivedMessages={receivedMessages}
-              sentMessages={messageList.sentMessages}
+              sentMessages={sentMessages}
             />
             {/* {currentChatMessages && currentChatMessages.receivingMessages.forEach((m, i) => (
               <Card.Text
