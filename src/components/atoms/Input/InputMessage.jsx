@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useFirestore } from "react-redux-firebase";
+import moment from "moment"
 import "./inputMessage.scss"
 
 const InputMessage = ({
@@ -27,16 +28,17 @@ const InputMessage = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const date = new Date()
 
     const message = {
-      createdAt: new Date(),
+      createdAt: date.getTime(),
       title: messageCategory,
       message: value,
       senderData: {
         id: uid,
         ...profile
       },
-      opened: false
+      unread: true
     }
 
     const messageFs =
