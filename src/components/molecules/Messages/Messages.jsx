@@ -11,64 +11,122 @@ import ChatWidget from "components/atoms/ChatWidget/ChatWidget";
 const Messages = () => {
   const firestore = useFirestore()
   const { uid } = useSelector((state) => state.firebase.auth)
+
   useFirestoreConnect([
     {
-      collection: `users/${uid}/messages`,
-      storeAs: "messages"
+      collection: `users/${uid}/receivedMessages`,
+      storeAs: "receivedMessagesData"
     }
   ])
 
-  const messages = useSelector((state) =>
-    state.firestore.ordered.messages &&
-    state.firestore.ordered.messages)
+  useFirestoreConnect([
+    {
+      collection: `users/${uid}/sentMessages`,
+      storeAs: "sentMessages"
+    }
+  ])
+
+  const { receivedMessagesData, sentMessages } = useSelector((state) =>
+    state.firestore.ordered &&
+    state.firestore.ordered)
 
   const [users, setUsers] = useState([])
   const [messageList, setMessageList] = useState({})
 
-  const groupedMessages = () => {
-    const userList = {}
+  const [receivedMessages, setReceivedMessages] = useState()
+
+
+  const getReceivedMessages = () => {
+    const messageListItems = {
+      receivedMessages: {},
+    }
+
     const users = []
 
-    if (messages) {
-      for (const message of messages) {
+    if (receivedMessagesData) {
+      for (const message of receivedMessagesData) {
         const displayName = message.senderData.displayName
         const email = message.senderData.email
 
         if (displayName) {
-          userList[displayName] = []
+          messageListItems.receivedMessages[displayName] = []
 
           if (!users.includes(displayName)) {
             users.push(displayName)
           }
         }
-        if (email) {
-          userList[email] = []
+        else if (email) {
+          messageListItems.receivedMessages[email] = []
           if (!users.includes(email)) {
             users.push(email)
           }
         }
       }
 
-      for (const message of messages) {
+      for (const message of receivedMessagesData) {
         const displayName = message.senderData.displayName
         const email = message.senderData.email
         if (displayName) {
-          if (userList[displayName]) {
-            userList[displayName].push(message)
+          if (messageListItems.receivedMessages[displayName]) {
+            messageListItems.receivedMessages[displayName].push(message)
           }
         }
         if (email) {
-          if (userList[email]) {
-            userList[email].push(message)
+          if (messageListItems.receivedMessages[email]) {
+            messageListItems.receivedMessages[email].push(message)
           }
         }
       }
 
     }
 
-    setMessageList(userList)
+    setReceivedMessages({
+      receivedMessages: messageListItems.receivedMessages,
+    })
     setUsers(users)
   }
+
+  // const getSentMessages = () => {
+  //   const messageListItems = {
+  //     receivedMessages: {},
+  //     sentMessages: {},
+  //   }
+
+  //   if (sentMessages) {
+  //     for (const message of sentMessages) {
+  //       const displayName = message.senderData.displayName
+  //       const email = message.senderData.email
+
+  //       if (displayName) {
+  //         messageListItems.sentMessages[displayName] = []
+
+  //       }
+  //       else if (email) {
+  //         messageListItems.sentMessages[email] = []
+
+  //       }
+  //     }
+
+  //     for (const message of sentMessages) {
+  //       const displayName = message.senderData.displayName
+  //       const email = message.senderData.email
+  //       if (displayName) {
+  //         if (messageListItems.sentMessages[displayName]) {
+  //           messageListItems.sentMessages[displayName].push(message)
+  //         }
+  //       }
+  //       if (email) {
+  //         if (messageListItems.sentMessages[email]) {
+  //           messageListItems.sentMessages[email].push(message)
+  //         }
+  //       }
+  //     }
+  //   }
+  //   setMessageList({
+  //     receivedMessages: messageList.receivedMessages,
+  //     sentMessages: messageListItems.sentMessages
+  //   })
+  // }
 
   const [convoOpen, setConvoOpen] = useState(false)
   const [currentChatUser, setCurrentChatUser] = useState(undefined)
@@ -79,32 +137,45 @@ const Messages = () => {
     await firestore
       .collection('users')
       .doc(uid)
-      .collection('messages')
+      .collection('receivedMessages')
       .doc(recentMessage.id)
       .update({
         unread: false
       })
 
-    setConvoOpen(true)
     setCurrentChatUser(recentMessage.senderData)
-    setCurrentChatMessages(messageList[(recentMessage.senderData.displayName || recentMessage.senderData.email)])
+    setCurrentChatMessages(messageList)
+    setConvoOpen(true)
   }
 
+  useEffect(() => {
+    if (receivedMessagesData) {
 
+      getReceivedMessages()
+    }
+    // getSentMessages()
+    // dispatch new alert if new message 
+  }, [])
 
   useEffect(() => {
-    if (messages) {
-      groupedMessages()
-    }
+    getReceivedMessages()
     // dispatch new alert if new message 
-  }, [messages])
+  }, [receivedMessagesData])
+
+  // useEffect(() => {
+  //   if (sentMessages) {
+  //     getSentMessages()
+  //   }
+
+  //   // dispatch new alert if new message 
+  // }, [sentMessages])
 
 
   return (
     <div className="messages">
       Messages:
 
-      {Object.keys(messageList).length > 0 && users.map((userName, i) => (
+      {receivedMessages && users && users.map((userName, i) => (
         <Card
           body
           key={i}
@@ -112,23 +183,22 @@ const Messages = () => {
           <Card.Title>
             {userName}
           </Card.Title>
-          {messages && messageList[userName].map((m, i) => (
-            i === 0 &&
+          {receivedMessages[userName] && (
             <Card.Text
-              onClick={() => openMessage(m)}
-              key={i}
+              onClick={() => openMessage(receivedMessages[userName][0])}
             >
-              {m.message}
-              {m.unread &&
-                <span>** New ** </span>}
+              {receivedMessages[userName][0].message}
+              {receivedMessages[userName][0].unread &&
+                <span>** New ** </span>
+              }
 
-              <span>{moment(m.createdAt).format('h:mm a')}</span>
+              <span>{moment(receivedMessages[userName][0].createdAt).format('h:mm a')}</span>
             </Card.Text>
-          ))}
+          )}
         </Card>
       ))}
 
-      {convoOpen && currentChatUser && (
+      {convoOpen && currentChatUser && currentChatUser.id && (
         <Modal.Dialog>
           <Modal.Header>
             <Modal.Title>Modal title</Modal.Title>
@@ -137,9 +207,11 @@ const Messages = () => {
           <Modal.Body>
             <ChatWidget
               postUserId={currentChatUser.id}
-              messages={messageList[currentChatUser.displayName || currentChatUser.email]}
+              currentChatUser={currentChatUser}
+              receivedMessages={receivedMessages}
+              sentMessages={messageList.sentMessages}
             />
-            {currentChatMessages.map((m, i) => (
+            {/* {currentChatMessages && currentChatMessages.receivingMessages.forEach((m, i) => (
               <Card.Text
                 key={i}
               >
@@ -149,7 +221,7 @@ const Messages = () => {
 
                 <span>{moment(m.createdAt).format('h:mm a')}</span>
               </Card.Text>
-            ))}
+            ))} */}
           </Modal.Body>
 
           <Modal.Footer>

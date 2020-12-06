@@ -31,7 +31,7 @@ const InputMessage = ({
 
     const message = {
       createdAt: date.getTime(),
-      title: messageCategory,
+      title: "Interested",
       message: value,
       senderData: {
         id: uid,
@@ -40,22 +40,47 @@ const InputMessage = ({
       unread: true
     }
 
-    const messageFs =
+    const sendMessageToUser =
       await firestore
-        .collection('users')
-        .doc(postUserId)
-        .collection('messages')
+        .collection(`users/${postUserId}/receivedMessages`)
         .add(message)
 
-    if (messageFs.id) {
+    const addToSentMessages =
       await firestore
-        .collection('users')
-        .doc(postUserId)
-        .collection('messages')
-        .doc(messageFs.id)
+        .collection(`users/${uid}/sentMessages`)
+        .add(message)
+
+    updateMessages(sendMessageToUser.id, addToSentMessages.id)
+
+    // Change to set_notification
+    dispatch({
+      type: "SET_ERRORS",
+      payload: {
+        error: {
+          type: "success",
+          message: "Message sent!",
+          heading: "Success"
+        }
+      }
+    })
+  }
+
+  const updateMessages = async (userReceivingId, currentUserId) => {
+    if (userReceivingId && currentUserId) {
+      await firestore
+        .collection(`users/${postUserId}/receivedMessages`)
+        .doc(userReceivingId)
         .update({
-          id: messageFs.id
+          id: userReceivingId
         })
+
+      await firestore
+        .collection(`users/${uid}/sentMessages`)
+        .doc(currentUserId)
+        .update({
+          id: currentUserId
+        })
+
     } else {
       dispatch({
         type: "SET_ERRORS",
@@ -67,17 +92,6 @@ const InputMessage = ({
         }
       })
     }
-
-    dispatch({
-      type: "SET_ERRORS",
-      payload: {
-        error: {
-          type: "success",
-          message: "Message sent!",
-          heading: "Success"
-        }
-      }
-    })
   }
 
   return (

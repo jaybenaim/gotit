@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
-import { addResponseMessage, setQuickButtons, Widget } from "react-chat-widget"
+import { addResponseMessage, setQuickButtons, Widget, renderCustomComponent } from "react-chat-widget"
 import { useDispatch, useSelector } from "react-redux";
 import { useFirestore } from "react-redux-firebase";
+import ReceivedMessage from "../ReceivedMessage/ReceivedMessage";
+import SentMessage from "../SentMessage/SentMessage";
 import "./chatWidget.scss"
 
 const ChatWidget = ({
   title = "in-contact",
   postUserId,
-  messages,
+  currentChatUser,
+  receivedMessages,
+  sentMessages,
   buttons = [{
     label: 'Where are you located?',
     value: 'Where are you located?'
@@ -45,22 +49,35 @@ const ChatWidget = ({
       unread: true
     }
 
-    const messageFs =
+    const sendMessageToUser =
       await firestore
-        .collection('users')
-        .doc(postUserId)
-        .collection('messages')
+        .collection(`users/${postUserId}/receivedMessages`)
         .add(message)
 
-    if (messageFs.id) {
+    const addToSentMessages =
       await firestore
-        .collection('users')
-        .doc(postUserId)
-        .collection('messages')
-        .doc(messageFs.id)
+        .collection(`users/${uid}/sentMessages`)
+        .add(message)
+
+    updateMessages(sendMessageToUser.id, addToSentMessages.id)
+  }
+
+  const updateMessages = async (userReceivingId, currentUserId) => {
+    if (userReceivingId && currentUserId) {
+      await firestore
+        .collection(`users/${postUserId}/receivedMessages`)
+        .doc(userReceivingId)
         .update({
-          id: messageFs.id
+          id: userReceivingId
         })
+
+      await firestore
+        .collection(`users/${uid}/sentMessages`)
+        .doc(currentUserId)
+        .update({
+          id: currentUserId
+        })
+
     } else {
       dispatch({
         type: "SET_ERRORS",
@@ -72,17 +89,6 @@ const ChatWidget = ({
         }
       })
     }
-
-    dispatch({
-      type: "SET_ERRORS",
-      payload: {
-        error: {
-          type: "success",
-          message: "Message sent!",
-          heading: "Success"
-        }
-      }
-    })
   }
 
   const handleQuickButtonClicked = data => {
@@ -90,17 +96,52 @@ const ChatWidget = ({
     setQuickButtons(buttons.filter(button => button.value !== data));
   };
 
-  useEffect(() => {
+  // const [receivedMessages, setReceivedMessages] = useState()
 
-    if (messages) {
-      for (const message of messages) {
-        addResponseMessage(message.message)
-      }
+  const [messages, setMessages] = useState({})
+
+  useEffect(() => {
+    const name = currentChatUser.displayName || currentChatUser.email
+
+    messages.receivedMessages = receivedMessages
+    // receivedMessages[name].filter(message => {
+    // })
+
+    for (const message of receivedMessages[name]) {
+      renderCustomComponent(ReceivedMessage, { message })
     }
 
+    setQuickButtons(buttons);
+  }, [receivedMessages])
+
+  // const [sentMessages, setSentMessages] = useState()
+
+  useEffect(() => {
+    const name = profile.displayName || profile.email
+
+    for (const message of sentMessages[name]) {
+
+      renderCustomComponent(SentMessage, { message })
+    }
 
     setQuickButtons(buttons);
-  }, [messages])
+  }, [sentMessages])
+
+  // useEffect(() => {
+  //   const name = profile.displayName || profile.email
+
+  //   renderCustomComponent(ReceivedMessage, { message: receivedMessages[name] })
+
+  // }, [receivedMessages])
+
+  // useEffect(() => {
+  //   const name = profile.displayName || profile.email
+
+  //   renderCustomComponent(SentMessage, { message: sentMessages[name] })
+
+  // }, [sentMessages])
+
+
 
   return (
     <div className="chatWidget">
