@@ -23,7 +23,7 @@ const CardPost = ({ post, htmlIs: Link = "a" }) => {
           </Card.Body>
         </Link>
 
-        <InterestedButton post={post} />
+        {/* <InterestedButton post={post} /> */}
       </Card>
     </div>
   )

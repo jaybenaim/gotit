@@ -91,7 +91,6 @@ const InterestedButton = ({ post }) => {
         </Form.Group>
         <Button type="submit">Send message</Button>
       </Form>
-
     </div>
   )
 }
