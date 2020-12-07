@@ -3,6 +3,7 @@ import { useFirebase } from "react-redux-firebase";
 import { useHistory, Link } from "react-router-dom";
 import Notifications from "components/atoms/Notifications/Notifications";
 import "assets/stylesheets/signin.scss";
+import { Form } from "react-bootstrap";
 
 const SignIn = () => {
   const firebase = useFirebase();
@@ -11,25 +12,38 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
 
-  const signInWithProvider = (provider) => {
+  const signInWithProvider = async (provider) => {
     let userEmail = email.length >= 1 ? email : "";
     let userPassword = password.length >= 1 ? password : "";
+
     if (provider === "email") {
-      firebase
+      const user = await firebase
         .createUser({
           email,
           password,
+          displayName: email,
+          avatarUrl: '',
+          providerData: {
+            type: 'email'
+          }
         })
-        .then(() => {
-          history.push("/home");
+        .then(async () => {
+          await firebase.
+            updateProfile({
+              displayName: email
+            }).then(res => {
+              history.push("/home");
+            })
         })
         .catch((err) => {
           if (err.code.includes("account-exists")) {
             setErrors([...errors, "Account Exists"]);
           }
         });
+
+
     } else {
-      firebase
+      await firebase
         .login({
           provider: provider === "email" ? null : provider,
           type: "popup",
@@ -64,25 +78,24 @@ const SignIn = () => {
           <div className="card col-md-4 col-md-offset-4">
             <div className="login__card">
               <div className="card-block">
-                <form name="userform" method="post">
+                <Form name="userform" method="post">
                   <h3>Sign up </h3>
                   <Link to="sign-in">Log In</Link>
 
-                  <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Email address</label>
-                    <input
+                  <Form.Group>
+                    <Form.Label htmlFor="exampleInputEmail1">Email address</Form.Label>
+                    <Form.Control
                       type="email"
-                      className="form-control"
                       id="exampleInputEmail1"
                       placeholder="Email"
                       name="email"
                       required
                       onChange={(e) => setEmail(e.target.value)}
                     />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">Password</label>
-                    <input
+                  </Form.Group>
+                  <Form.Group>
+                    <Form.Label htmlFor="exampleInputPassword1">Password</Form.Label>
+                    <Form.Control
                       type="password"
                       className="form-control"
                       id="exampleInputPassword1"
@@ -91,7 +104,7 @@ const SignIn = () => {
                       required
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                  </div>
+                  </Form.Group>
 
                   <div className="form-group">
                     <button
@@ -155,13 +168,12 @@ const SignIn = () => {
                       Login with Google
                     </button>
                   </div>
-                </form>
+                </Form>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h1>Sign In</h1>
     </div>
   );
 };
