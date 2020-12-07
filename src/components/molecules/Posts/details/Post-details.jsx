@@ -22,8 +22,15 @@ const PostDetails = ({ location, location: { state: currentPost } }) => {
   return (
     <div className="post-details">
       {post && (
-        <CardPost post={post} htmlIs={"div"} />
+        <>
+          <CardPost post={post} htmlIs={"div"} />
+          <div className="post-details__sender-info">
+            <p>{post.user.profile.displayName}</p>
+
+          </div>
+        </>
       )}
+
 
     </div>
   )
