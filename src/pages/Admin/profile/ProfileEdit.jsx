@@ -2,17 +2,18 @@ import { storage } from 'config/firebase';
 import React, { useState } from 'react';
 import { Button, Card, Container, Form, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFirestore } from 'react-redux-firebase';
+import { useFirebase, useFirestore } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 
 const ProfileEdit = () => {
   const dispatch = useDispatch()
-  const firestore = useFirestore()
+  const firebase = useFirebase()
 
   const { profile, auth: { uid } } = useSelector((state) => state.firebase)
   const [isLoading, setLoading] = useState(false)
 
-  const [displayName, setDisplayName] = useState()
+  const [displayName, setDisplayName] = useState('')
+  const [phone, setPhone] = useState("");
 
   const handleImage = async (e) => {
     const imageAsFile = e.target.files[0]
@@ -48,7 +49,7 @@ const ProfileEdit = () => {
           .getDownloadURL()
 
         if (firebaseUrl) {
-          await firestore.collection('users').doc(uid).update({
+          await firebase.updateProfile({
             avatarUrl: firebaseUrl
           })
         }
@@ -59,26 +60,44 @@ const ProfileEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    await firestore.collection('users').doc(uid).update({
-      displayName
-    }).catch(err => {
-      dispatch({
-        type: "SET_ERRORS",
-        variant: 'danger',
-        message: 'Error updating username:' + err.message
+    if (displayName !== '') {
+      await firebase.updateProfile({
+        displayName
+      }).catch(err => {
+        dispatch({
+          type: "SET_ERRORS",
+          variant: 'danger',
+          message: 'Error updating username:' + err.message
+        })
       })
-    })
+    }
+
+    if (phone !== '') {
+      await firebase.updateProfile({
+        phone
+      }).catch(err => {
+        dispatch({
+          type: "SET_ERRORS",
+          variant: 'danger',
+          message: 'Error updating contact number:' + err.message
+        })
+      })
+    }
+
 
   }
 
   return (
-    <Container class="profile-edit">
+    <Container className="profile-edit">
       <Card style={{ width: '18rem', display: 'flex', flexDirection: 'row', marginTop: "40px" }}>
         <Card.Img variant="top" src={profile.avatarUrl} />
         <Card.Body>
           <Card.Title>{profile.displayName}</Card.Title>
           <Card.Text>
-            {profile.email}
+            Email: {profile.email}
+          </Card.Text>
+          <Card.Text>
+            Phone: {profile.phone}
           </Card.Text>
         </Card.Body>
       </Card>
@@ -95,6 +114,7 @@ const ProfileEdit = () => {
           <Form.Control
             type="text"
             placeholder={profile.displayName}
+            defaultValue={profile.displayName}
             onChange={(e) => setDisplayName(e.target.value)}
           />
         </Form.Group>
@@ -108,6 +128,20 @@ const ProfileEdit = () => {
             id="avatarUrl"
             accept="image/*"
             onChange={handleImage}
+          />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label htmlFor="phone">Phone Number</Form.Label>
+          <Form.Control
+            type="tel"
+            maxLength="10"
+            className="form-control"
+            id="phone"
+            placeholder="4165555555"
+            name="phone"
+            defaultValue={profile.phone}
+            onChange={(e) => setPhone(e.target.value.replace(/[\s-]/g, ''))}
           />
         </Form.Group>
 

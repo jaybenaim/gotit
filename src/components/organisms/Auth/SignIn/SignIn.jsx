@@ -23,13 +23,18 @@ const SignIn = () => {
         email: userEmail,
         password: userPassword,
       })
-      .then(() => {
+      .then(async () => {
+        await firebase.updateProfile({ phone: '' })
         history.push("/admin");
       })
       .catch((err) => {
-        if (err.code.includes("account-exists")) {
-          setErrors([...errors, "Account Exists"]);
+        if (err.code !== undefined) {
+          if (err.code.includes("account-exists")) {
+            setErrors([...errors, "Account Exists"]);
+          }
         }
+
+        setErrors([...errors, 'Unknown Error' + err])
       });
   };
   const errorElements = () =>

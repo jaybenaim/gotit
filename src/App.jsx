@@ -82,4 +82,4 @@ const App = () => {
   );
 };
 
-export default connect(() => { }, { wakeDb })(App);
+export default connect(() => ({}), { wakeDb })(App);

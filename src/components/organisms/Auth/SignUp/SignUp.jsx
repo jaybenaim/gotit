@@ -10,6 +10,7 @@ const SignIn = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState([]);
 
   const signInWithProvider = async (provider) => {
@@ -21,16 +22,18 @@ const SignIn = () => {
         .createUser({
           email,
           password,
-          displayName: email,
-          avatarUrl: '',
-          providerData: {
-            type: 'email'
-          }
+
+
         })
         .then(async () => {
           await firebase.
             updateProfile({
-              displayName: email
+              displayName: email,
+              phone,
+              avatarUrl: '',
+              providerData: {
+                type: 'email'
+              },
             }).then(res => {
               history.push("/home");
             })
@@ -45,18 +48,24 @@ const SignIn = () => {
     } else {
       await firebase
         .login({
-          provider: provider === "email" ? null : provider,
+          provider: provider,
           type: "popup",
           email: userEmail,
           password: userPassword,
+          phone
         })
-        .then(() => {
+        .then(async (res) => {
+          await firebase.updateProfile({ phone })
           history.push("/home");
         })
         .catch((err) => {
-          if (err.code.includes("account-exists")) {
-            setErrors([...errors, "Account Exists"]);
+          if (err.code !== undefined) {
+            if (err.code.includes("account-exists")) {
+              setErrors([...errors, "Account Exists"]);
+            }
           }
+
+          setErrors([...errors, 'Unknown Error'])
         });
     }
   };
@@ -93,6 +102,7 @@ const SignIn = () => {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </Form.Group>
+
                   <Form.Group>
                     <Form.Label htmlFor="exampleInputPassword1">Password</Form.Label>
                     <Form.Control
@@ -106,6 +116,19 @@ const SignIn = () => {
                     />
                   </Form.Group>
 
+                  <Form.Group>
+                    <Form.Label htmlFor="phone">Phone Number</Form.Label>
+                    <Form.Control
+                      type="tel"
+                      maxlength="12"
+                      className="form-control"
+                      id="phone"
+                      placeholder="416-555-5555"
+                      name="phone"
+                      onChange={(e) => setPhone(e.target.value.replace(/[\s-]/g, ''))}
+                    />
+                  </Form.Group>
+
                   <div className="form-group">
                     <button
                       type="buton"
@@ -115,7 +138,7 @@ const SignIn = () => {
                         signInWithProvider("email");
                       }}
                     >
-                      Login with Email
+                      Signup with Email
                     </button>
                   </div>
 
