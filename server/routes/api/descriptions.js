@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const query = req.query.search
 
-  // 2500 request a data $0.004 per after that 
+  // 2500 request a day $0.004 per after that 
   await Axios.get(`https://wordsapiv1.p.rapidapi.com/words/${query}`, {
     headers: {
       "X-Mashape-Key": process.env.RAPID_API_KEY,
@@ -45,7 +45,6 @@ router.get("/", async (req, res) => {
     }
 
     res.send(words)
-    // res.send(words)
   }).catch(err => {
     res.send(err)
   })
