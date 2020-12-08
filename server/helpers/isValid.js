@@ -1,7 +1,9 @@
 
 const isValid = (string) => {
   const illegalPhrases = [
-    'electric chair'
+    'electric chair',
+    'the flesh of wild animals that is used for food',
+    'a secret scheme to do something (especially something underhand or illegal)'
   ]
 
   const illegalWords = [
@@ -10,6 +12,7 @@ const isValid = (string) => {
     'electrocution',
     'murder',
     'death',
+    'lame'
   ]
 
   const words = string.split(' ')
