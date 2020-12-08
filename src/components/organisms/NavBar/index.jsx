@@ -65,7 +65,7 @@ const NavBar = () => {
           </Link>
           {isLoggedIn ? (
             <>
-              <Link to="/admin" className="nav-item nav-link ">
+              <Link to="/profile" className="nav-item nav-link ">
                 Account
               </Link>
 

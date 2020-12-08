@@ -13,7 +13,9 @@ import PostDetails from "components/molecules/Posts/details/Post-details";
 import { useEffect } from "react";
 
 import Notifications from "components/atoms/Notifications/Notifications";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
+import ProfileEdit from "pages/Admin/profile/ProfileEdit";
+import { wakeDb } from "redux/actions/dbActions"
 
 const App = () => {
   const { errors } = useSelector((state) => state)
@@ -21,6 +23,17 @@ const App = () => {
   const [error, setErrorMessage] = useState({})
 
   const dispatch = useDispatch()
+
+  const dbIsActive = useSelector(state => state.db.status)
+
+  useEffect(() => {
+    if (dbIsActive !== 'active') {
+      dispatch({
+        type: "SET_DB_STATUS",
+      })
+    }
+    // eslint-disable-next-line 
+  }, [])
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
@@ -55,17 +68,13 @@ const App = () => {
       )}
 
       <Switch>
-        <PrivateRoute exact path="/admin">
-          <AdminHome />
-        </PrivateRoute>
-
-        <PrivateRoute exact path="/">
-          <Home />
-        </PrivateRoute>
-
         <Route exact path="/" component={Home} />
         <Route exact path="/sign-in" component={SignIn} />
         <Route exact path="/sign-up" component={SignUp} />
+        <PrivateRoute exact path="/profile">
+          <AdminHome />
+        </PrivateRoute>
+        <Route exact path="/profile/edit" component={ProfileEdit} />
         <Route exact path="/posts" component={Posts} />
         <Route exact path="/posts/:id" render={(props) => <PostDetails {...props} />} />
       </Switch>
@@ -73,4 +82,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect(() => { }, { wakeDb })(App);

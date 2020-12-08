@@ -1,21 +1,9 @@
 ﻿import ImageUpload from "components/atoms/uploader/ImageUpload/default/ImageUpload";
 import Header from "components/organisms/Header/Header";
 import React from "react";
-import { useEffect } from "react";
-import { connect, useSelector } from "react-redux";
 import "./home.scss"
-import { wakeDb } from "redux/actions/dbActions"
 
-const Home = (props) => {
-
-  const dbIsActive = useSelector(state => state.db.status)
-
-  useEffect(() => {
-    if (dbIsActive !== 'active') {
-      props.wakeDb()
-    }
-    // eslint-disable-next-line 
-  }, [])
+const Home = () => {
 
   return (
     <main id="home" className="home">
@@ -30,4 +18,4 @@ const Home = (props) => {
     </main>
   );
 };
-export default connect(() => { return {} }, { wakeDb })(Home);
+export default Home 
