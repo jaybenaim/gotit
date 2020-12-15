@@ -25,4 +25,4 @@ yarn-error.log*
 
 # dependencies
 /node_modules
-_templates
+# _templates
