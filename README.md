@@ -26,3 +26,5 @@ Ready for gh-pages deploy.
 
    
 See the demo at https://jaybenaim.github.io/react-starter-template/
+
+* Favourites
